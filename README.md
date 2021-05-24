@@ -1,1 +1,1 @@
-![Config Template - Easily define configuration file structues, and ceck if a given configuration file matches the template.](assets/configTemplateBanner.png)
+![Config Template - Easily define configuration file structues, and ceck if a given configuration file matches the template.](https://raw.githubusercontent.com/RealA10N/configTemplate/master/assets/configTemplateBanner.png)
