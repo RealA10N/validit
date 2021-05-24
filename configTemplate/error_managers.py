@@ -35,3 +35,9 @@ class TemplateCheckErrorCollection(TemplateCheckErrorManager):
 
         for error in errors:
             print(error.description)
+
+
+class TemplateCheckRaiseOnError(TemplateCheckErrorManager):
+
+    def register_error(self, error: TemplateCheckError):
+        raise error
