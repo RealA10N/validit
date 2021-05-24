@@ -1,5 +1,6 @@
 import typing
 from collections import defaultdict
+from abc import ABC, abstractmethod
 
 
 class TemplateCheckError(Exception):
@@ -73,14 +74,21 @@ class TemplateCheckInvalidDataError(TemplateCheckError):
         return got.__name__
 
 
-class TemplateCheckErrorCollection:
+class TemplateCheckErrorManager(ABC):
+
+    @abstractmethod
+    def register_error(self, error: TemplateCheckError):
+        pass
+
+
+class TemplateCheckErrorCollection(TemplateCheckErrorManager):
     """ An object that collects errors and can display them to the user. """
 
     def __init__(self):
         self.by_type = defaultdict(list)
         self.by_order = list()
 
-    def add_error(self, error: TemplateCheckError):
+    def register_error(self, error: TemplateCheckError):
         """ Add an error to the collection. """
 
         self.by_type[type(error)].append(error)

@@ -4,6 +4,7 @@ from .errors import (
     TemplateCheckError,
     TemplateCheckInvalidDataError,
     TemplateCheckMissingDataError,
+    TemplateCheckErrorManager as ErrorManager,
     TemplateCheckErrorCollection as ErrorCollection,
 )
 
@@ -60,8 +61,8 @@ class Template:
     def full_check(self,
                    data: typing.Any,
                    path: typing.Tuple[str] = tuple(),
-                   errors: ErrorCollection = ErrorCollection(),
-                   ) -> ErrorCollection:
+                   errors: ErrorManager = ErrorCollection(),
+                   ) -> ErrorManager:
         try: self.check(data, path)
         except TemplateCheckError as error:
             errors.add_error(error)
@@ -92,11 +93,11 @@ class TemplateList(Template):
     def full_check(self,
                    data: typing.Any,
                    path: typing.Tuple[str] = tuple(),
-                   errors: ErrorCollection = ErrorCollection(),
-                   ) -> ErrorCollection:
+                   errors: ErrorManager = ErrorCollection(),
+                   ) -> ErrorManager:
         try: super().check(data, path)
         except TemplateCheckError as error:
-            errors.add_error(error)
+            errors.register_error(error)
         else:
             for index, element in enumerate(data):
                 self.element_template.full_check(
@@ -157,16 +158,17 @@ class TemplateDict(Template):
     def full_check(self,
                    data: typing.Any,
                    path: typing.Tuple[str] = tuple(),
-                   errors: ErrorCollection = ErrorCollection(),
-                   ) -> ErrorCollection:
+                   errors: ErrorManager = ErrorCollection(),
+                   ) -> ErrorManager:
         try: super().check(data, path)
         except TemplateCheckError as error:
-            errors.add_error(error)
+            errors.register_error(error)
         else:
             for key in self.template:
                 cur_path = path + (key,)
                 if key not in data:
-                    errors.add_error(TemplateCheckMissingDataError(cur_path))
+                    errors.register_error(
+                        TemplateCheckMissingDataError(cur_path))
                 else:
                     self.template[key].full_check(
                         data=data[key],
