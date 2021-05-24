@@ -15,26 +15,18 @@ class TemplateCheckErrorCollection(TemplateCheckErrorManager):
     """ An object that collects errors and can display them to the user. """
 
     def __init__(self):
-        self.by_type = defaultdict(list)
-        self.by_order = list()
+        self.groups = defaultdict(list)
 
     def register_error(self, error: TemplateCheckError):
         """ Add an error to the collection. """
+        self.groups[type(error)].append(error)
 
-        self.by_type[type(error)].append(error)
-        self.by_order.append(error)
-
-    def print_errors(self, group_by_type=False):
+    def print_errors(self):
         """ Print the collected errors to the user. """
 
-        errors = [
-            error
-            for error_group in self.by_type.values()
-            for error in error_group
-        ] if group_by_type else self.by_order
-
-        for error in errors:
-            print(error.description)
+        for error_group in self.groups.values():
+            for error in error_group:
+                print(error.description)
 
 
 class TemplateCheckRaiseOnError(TemplateCheckErrorManager):
