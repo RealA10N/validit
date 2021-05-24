@@ -1,9 +1,13 @@
 import typing
 from .exceptions import InvalidTemplateConfiguration
+
 from .errors import (
     TemplateCheckError,
     TemplateCheckInvalidDataError,
     TemplateCheckMissingDataError,
+)
+
+from .error_managers import (
     TemplateCheckErrorManager as ErrorManager,
     TemplateCheckErrorCollection as ErrorCollection,
 )
