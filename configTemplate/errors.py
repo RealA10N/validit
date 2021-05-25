@@ -56,7 +56,7 @@ class TemplateCheckInvalidDataError(TemplateCheckError):
 
         super().__init__(
             path,
-            msg=f"Expected {self.expected_str}, got '{self.got_str}'",
+            msg=f"Expected {self.expected_str} but got '{self.got_str}'",
         )
 
     @property
