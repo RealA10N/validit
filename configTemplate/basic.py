@@ -10,6 +10,7 @@ from .errors import (
 from .error_managers import (
     TemplateCheckErrorManager as ErrorManager,
     TemplateCheckErrorCollection as ErrorCollection,
+    TemplateCheckRaiseOnError as RaiseOnErrorManager,
 )
 
 
@@ -36,7 +37,8 @@ class Template:
     def check(self,
               data: typing.Any,
               path: typing.Tuple[str] = tuple(),
-              ) -> None:
+              errors: ErrorManager = ErrorCollection(),
+              ) -> ErrorManager:
 
         # Basic type check
         if isinstance(data, tuple(self.base_types)):
@@ -51,20 +53,11 @@ class Template:
             else: return  # If check passed successfully -> exits current check
 
         # If both checks failed, raise an error
-        raise TemplateCheckInvalidDataError(
+        errors.register_error(TemplateCheckInvalidDataError(
             path=path,
             expected=self.base_types + self.templates,
             got=data,
-        )
-
-    def full_check(self,
-                   data: typing.Any,
-                   path: typing.Tuple[str] = tuple(),
-                   errors: ErrorManager = ErrorCollection(),
-                   ) -> ErrorManager:
-        try: self.check(data, path)
-        except TemplateCheckError as error:
-            errors.add_error(error)
+        ))
 
         return errors
 
@@ -78,32 +71,23 @@ class TemplateList(Template):
     def check(self,
               data: typing.Any,
               path: typing.Tuple[str] = tuple(),
-              ) -> None:
+              errors: ErrorManager = ErrorCollection(),
+              ) -> ErrorManager:
+
         # Check if data is a list
-        super().check(data, path)
-
-        # For each element in the list,
-        # check if it follows the element template
-        for index, element in enumerate(data):
-            # append current list index to path
-            cur_path = path + (str(index),)
-            self.element_template.check(element, path=cur_path)
-
-    def full_check(self,
-                   data: typing.Any,
-                   path: typing.Tuple[str] = tuple(),
-                   errors: ErrorManager = ErrorCollection(),
-                   ) -> ErrorManager:
-        try: super().check(data, path)
+        temp_errors = RaiseOnErrorManager()
+        try: super().check(data, path, temp_errors)
         except TemplateCheckError as error:
+            # If caught an error, register it!
             errors.register_error(error)
+
         else:
+            # For each element in the list,
+            # check if it follows the element template
             for index, element in enumerate(data):
-                self.element_template.full_check(
-                    data=element,
-                    path=path + (str(index),),
-                    errors=errors
-                )
+                # append current list index to path
+                cur_path = path + (str(index),)
+                self.element_template.check(element, cur_path, errors)
 
         return errors
 
@@ -132,36 +116,16 @@ class TemplateDict(Template):
     def check(self,
               data: typing.Any,
               path: typing.Tuple[str] = tuple(),
-              ) -> None:
+              errors: ErrorManager = ErrorCollection(),
+              ) -> ErrorManager:
+
         # Check if the data is a dictionary
-        super().check(data, path)
-
-        # Check if all required keys are present in the given data
-        try: missing_key = next(
-            key
-            for key in self.template
-            if key not in data
-        )
-
-        # If found missing key, raises `MissingData` error
-        except StopIteration: pass
-        else:
-            missing_path = path + (missing_key,)
-            raise TemplateCheckMissingDataError(missing_path)
-
-        # For each key, check for corresponding template
-        for key in self.template:
-            cur_path = path + (key,)
-            self.template[key].check(data[key], path=cur_path)
-
-    def full_check(self,
-                   data: typing.Any,
-                   path: typing.Tuple[str] = tuple(),
-                   errors: ErrorManager = ErrorCollection(),
-                   ) -> ErrorManager:
-        try: super().check(data, path)
+        temp_errors = RaiseOnErrorManager()
+        try: super().check(data, path, temp_errors)
         except TemplateCheckError as error:
+            # If an error found, register it!
             errors.register_error(error)
+
         else:
             for key in self.template:
                 cur_path = path + (key,)
@@ -169,10 +133,6 @@ class TemplateDict(Template):
                     errors.register_error(
                         TemplateCheckMissingDataError(cur_path))
                 else:
-                    self.template[key].full_check(
-                        data=data[key],
-                        path=cur_path,
-                        errors=errors,
-                    )
+                    self.template[key].check(data[key], cur_path, errors)
 
         return errors
