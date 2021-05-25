@@ -6,6 +6,12 @@ def load_readme():
         return readme.read()
 
 
+def load_requirements():
+    return (
+        'colorama>=0.4.4. <0.5',
+    )
+
+
 def load_extras_require():
     requires = {
         'dev': (
@@ -47,5 +53,6 @@ setup(
     ],
     packages=find_packages(),
     python_requires='>=3.6',
+    install_requires=load_requirements(),
     extras_require=load_extras_require(),
 )

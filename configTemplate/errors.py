@@ -1,4 +1,5 @@
 import typing
+import colorama
 
 
 class TemplateCheckError(Exception):
@@ -23,8 +24,17 @@ class TemplateCheckError(Exception):
     def description(self,) -> str:
         """ Generates and returns a string that represents the current template
         check error. """
-        msg = f'{self.path_str} - ' if self.path else str()
+        msg = f'{self.path_str} ' if self.path else str()
         msg += self.msg if self.msg else str()
+        return msg
+
+    @property
+    def colored_description(self,) -> str:
+        """ Generates and returns a colors string that represents the current
+        template check error. """
+        msg = f'{colorama.Fore.YELLOW}{self.path_str} ' if self.path else str()
+        msg += f'{colorama.Fore.RED}{self.msg}' if self.msg else str()
+        msg += colorama.Style.RESET_ALL
         return msg
 
 

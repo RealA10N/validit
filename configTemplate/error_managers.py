@@ -26,7 +26,7 @@ class TemplateCheckErrorCollection(TemplateCheckErrorManager):
 
         for error_group in self.groups.values():
             for error in error_group:
-                print(error.description)
+                print(error.colored_description)
 
 
 class TemplateCheckRaiseOnError(TemplateCheckErrorManager):
