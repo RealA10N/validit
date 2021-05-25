@@ -9,10 +9,11 @@ def load_readme():
 def load_extras_require():
     requires = {
         'dev': (
-            'pytest>=6.2.4, <7',
+            'pytest>=6.2, <6.3',
+            'flake8>=3.9, <3.10'
         ),
         'yaml': (
-            'pyyaml>=5.4.1, <6',
+            'pyyaml>=5.4, <5.5',
         ),
     }
 
