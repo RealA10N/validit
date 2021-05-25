@@ -8,7 +8,7 @@ def load_readme():
 
 def load_requirements():
     return (
-        'colorama>=0.4.4, <0.5',
+        'termcolor==1.1.0',
     )
 
 

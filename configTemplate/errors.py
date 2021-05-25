@@ -1,5 +1,5 @@
 import typing
-import colorama
+from termcolor import colored
 
 
 class TemplateCheckError(Exception):
@@ -32,9 +32,9 @@ class TemplateCheckError(Exception):
     def colored_description(self,) -> str:
         """ Generates and returns a colors string that represents the current
         template check error. """
-        msg = f'{colorama.Fore.YELLOW}{self.path_str} ' if self.path else str()
-        msg += f'{colorama.Fore.RED}{self.msg}' if self.msg else str()
-        msg += colorama.Style.RESET_ALL
+        msg = colored(f'{self.path_str} ', 'yellow',
+                      attrs=['bold']) if self.path else str()
+        msg += colored(self.msg, 'red') if self.msg else str()
         return msg
 
 
