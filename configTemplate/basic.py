@@ -16,17 +16,16 @@ from .error_managers import (
 class Template:
 
     def __init__(self, *valid_types: typing.Union[type, 'Template']):
-        base_types = list()
-        templates = list()
+        self.base_types, self.templates = set(), set()
 
         for type_ in valid_types:
             if isinstance(type_, type):
                 # If a basic type like `str`, `int`, etc.
-                base_types.append(type_)
+                self.base_types.add(type_)
 
             elif isinstance(type_, Template):
                 # If an instance of a Template
-                templates.append(type_)
+                self.templates.add(type_)
 
             else:
                 raise InvalidTemplateConfiguration(
@@ -34,17 +33,13 @@ class Template:
                     f"instances, not '{type(type_).__name__}'"
                 )
 
-        # Converting valid type lists to tuples
-        self.base_types = tuple(base_types)
-        self.templates = tuple(templates)
-
     def check(self,
               data: typing.Any,
               path: typing.Tuple[str] = tuple(),
               ) -> None:
 
         # Basic type check
-        if isinstance(data, self.base_types):
+        if isinstance(data, tuple(self.base_types)):
             # If one of the accepted basic types, accepts it immediately and
             # doesn't raise an error.
             return
