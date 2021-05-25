@@ -55,7 +55,7 @@ class Template:
         # If both checks failed, raise an error
         errors.register_error(TemplateCheckInvalidDataError(
             path=path,
-            expected=self.base_types + self.templates,
+            expected=self.base_types | self.templates,
             got=data,
         ))
 

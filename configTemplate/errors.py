@@ -64,7 +64,8 @@ class TemplateCheckInvalidDataError(TemplateCheckError):
         """ A string that represents the expected type """
         formatname = lambda name: f"'{name.__name__}'"
 
-        start, last = self.expected[:-1], self.expected[-1]
+        excepted = list(self.expected)
+        start, last = excepted[:-1], excepted[-1]
         string = ', '.join(formatname(type_) for type_ in start)
 
         if string:
