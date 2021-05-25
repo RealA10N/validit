@@ -6,21 +6,32 @@ def load_readme():
         return readme.read()
 
 
-extras_require = {
-    'dev': (
-        'pytest>=6.2.4, <7',
-    ),
-    'yaml': (
-        'pyyaml>=5.4.1, <6',
-    ),
-}
+def load_extras_require():
+    requires = {
+        'dev': (
+            'pytest>=6.2.4, <7',
+        ),
+        'yaml': (
+            'pyyaml>=5.4.1, <6',
+        ),
+    }
+
+    # Add all required packages to 'dev'
+    requires['dev'] = tuple(
+        package
+        for group in requires.values()
+        for package in group
+    )
+
+    return requires
+
 
 setup(
     name='configTemplate',
+    description='Easily define and check configuration file structures',
     version='0.0.1',
     author='RealA10N',
     author_email='downtown2u@gmail.com',
-    description='Easily define and check configuration file structures',
     long_description=load_readme(),
     long_description_content_type='text/markdown',
     url='https://github.com/RealA10N/configTemplate',
@@ -35,5 +46,5 @@ setup(
     ],
     packages=find_packages(),
     python_requires='>=3.6',
-    extras_require=extras_require,
+    extras_require=load_extras_require(),
 )
