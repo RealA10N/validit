@@ -2,6 +2,8 @@ import typing
 from abc import ABC, abstractmethod
 from collections import defaultdict
 
+from termcolor import colored
+
 from .errors import TemplateCheckError
 
 
@@ -32,6 +34,13 @@ class TemplateCheckErrorCollection(TemplateCheckErrorManager):
         return self.no_errors
 
     def __repr__(self) -> str:
+        """ Returns a colored string that shows the results of the data
+        template check. """
+        if self.no_errors:
+            return colored(
+                'Data check resulted in ZERO errors!',
+                'green', attrs=('bold',)
+            )
         return '\n'.join(error.colored for error in self)
 
     def register_error(self, error: TemplateCheckError) -> None:
