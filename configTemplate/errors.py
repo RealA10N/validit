@@ -81,3 +81,26 @@ class TemplateCheckInvalidDataError(TemplateCheckError):
         if not isinstance(got, type):
             got = type(got)
         return got.__name__
+
+
+class TemplateCheckListLengthError(TemplateCheckError):
+
+    def __init__(self, path, expected: range, got: int):
+        self.expected = expected
+        self.got = got
+
+        super().__init__(path, msg=self._generate_error_msg())
+
+    def _generate_error_msg(self,):
+
+        first = self.expected.start
+        last = self.expected[-1]
+        steps = self.expected.step
+
+        msg = f'Allowed list length is between {first} and {last} '
+        if steps != 1:
+            msg += f'(with steps of {steps}) '
+
+        msg += f'and not {self.got}'
+
+        return msg

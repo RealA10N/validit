@@ -1,10 +1,14 @@
 import typing
-from .exceptions import InvalidTemplateConfiguration
+from .exceptions import (
+    InvalidTemplateConfiguration,
+    InvalidLengthRange,
+)
 
 from .errors import (
     TemplateCheckError,
     TemplateCheckInvalidDataError,
     TemplateCheckMissingDataError,
+    TemplateCheckListLengthError,
 )
 
 from .error_managers import (
@@ -12,6 +16,8 @@ from .error_managers import (
     TemplateCheckErrorCollection as ErrorCollection,
     TemplateCheckRaiseOnError as RaiseOnErrorManager,
 )
+
+classname = lambda instance: type(instance).__name__
 
 
 class Template:
@@ -31,7 +37,7 @@ class Template:
             else:
                 raise InvalidTemplateConfiguration(
                     "Accepted templates are object types and other template " +
-                    f"instances, not '{type(type_).__name__}'"
+                    f"instances, not '{classname(type_)}'"
                 )
 
     def check(self,
@@ -64,9 +70,17 @@ class Template:
 
 class TemplateList(Template):
 
-    def __init__(self, *valid_types):
+    def __init__(self, *valid_types, length: range = None):
         super().__init__(list, tuple)
         self.element_template = Template(*valid_types)
+
+        if length is not None and not isinstance(length, range):
+            raise InvalidLengthRange(
+                "List length should be a 'range' instance, " +
+                f"not '{classname(length)}'"
+            )
+
+        self.length = length
 
     def check(self,
               data: typing.Any,
@@ -82,6 +96,15 @@ class TemplateList(Template):
             errors.register_error(error)
 
         else:
+
+            if self.length is not None:
+                if len(data) not in self.length:
+                    errors.register_error(TemplateCheckListLengthError(
+                        path=path,
+                        expected=self.length,
+                        got=len(data),
+                    ))
+
             # For each element in the list,
             # check if it follows the element template
             for index, element in enumerate(data):
@@ -110,7 +133,7 @@ class TemplateDict(Template):
         else:
             raise InvalidTemplateConfiguration(
                 "Kwargs values should be template instances, " +
-                f"not {type(error_element).__name__}"
+                f"not '{classname(error_element)}'"
             )
 
     def check(self,
