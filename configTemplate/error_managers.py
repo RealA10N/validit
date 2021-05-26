@@ -28,24 +28,21 @@ class TemplateCheckErrorCollection(TemplateCheckErrorManager):
         )
 
     def __len__(self,) -> int:
+        """ Returns the number of registered errors """
         return self.count
 
     def __bool__(self,) -> bool:
+        """ Returns `True` only if there are no errors registered """
         return self.no_errors
 
     def __repr__(self) -> str:
-        """ Returns a colored string that shows the results of the data
-        template check. """
+        """ Returns a colored string that shows the results of the check """
         if self.no_errors:
             return colored(
                 'Data check resulted in ZERO errors!',
                 'green', attrs=('bold',)
             )
         return '\n'.join(error.colored for error in self)
-
-    def register_error(self, error: TemplateCheckError) -> None:
-        """ Add an error to the collection. """
-        self.groups[type(error)].append(error)
 
     @property
     def count(self,) -> int:
@@ -54,8 +51,12 @@ class TemplateCheckErrorCollection(TemplateCheckErrorManager):
 
     @property
     def no_errors(self,) -> bool:
-        """ Returns `True` only if there are zero errors registered. """
+        """ Returns `True` only if there are zero errors registered """
         return self.count == 0
+
+    def register_error(self, error: TemplateCheckError) -> None:
+        """ Add an error to the collection. """
+        self.groups[type(error)].append(error)
 
 
 class TemplateCheckRaiseOnError(TemplateCheckErrorManager):
