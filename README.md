@@ -1,9 +1,9 @@
-[![Build](https://github.com/RealA10N/configTemplate/actions/workflows/build.yaml/badge.svg)](https://github.com/RealA10N/configTemplate/actions/workflows/build.yaml)
-
 # configTemplate
 
-**Easily define configuration file structures, and check if a given
-configuration file matches the template.**
+[![Build](https://github.com/RealA10N/configTemplate/actions/workflows/build.yaml/badge.svg)](https://github.com/RealA10N/configTemplate/actions/workflows/build.yaml)
+
+Easily define configuration file structures, and check if a given
+configuration file matches the template.
 
 ## Usage
 
