@@ -1,6 +1,11 @@
+""" Test the creation of a template structure. """
+
 import pytest
 from configTemplate import Template, TemplateDict, TemplateList
-from configTemplate.exceptions import InvalidTemplateConfiguration
+from configTemplate.exceptions import (
+    InvalidTemplateConfiguration,
+    InvalidLengthRange,
+)
 
 
 class ExampleObj: pass
@@ -78,3 +83,20 @@ class TestTemplateList:
     def test_creation_fails(self, template):
         with pytest.raises(InvalidTemplateConfiguration):
             TemplateList(*template)
+
+    @pytest.mark.parametrize('template, length', (
+        ((int, float), range(10)),
+        ((str,), range(82)),
+        ((ExampleObj, AnotherObj), range(20, 32, 3)),
+    ))
+    def test_length(self, template, length):
+        TemplateList(*template, length=length)
+
+    @pytest.mark.parametrize('template, length', (
+        ((int, float), 10),
+        ((str,), 0),
+        ((ExampleObj, AnotherObj), range),
+    ))
+    def test_length_fails(self, template, length):
+        with pytest.raises(InvalidLengthRange):
+            TemplateList(*template, length=length)
