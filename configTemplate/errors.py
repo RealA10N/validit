@@ -29,7 +29,7 @@ class TemplateCheckError(Exception):
         return msg
 
     @property
-    def colored_description(self,) -> str:
+    def colored(self,) -> str:
         """ Generates and returns a colors string that represents the current
         template check error. """
         msg = colored(f'{self.path_str} ', 'yellow',

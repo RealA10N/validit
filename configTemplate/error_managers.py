@@ -1,3 +1,4 @@
+import typing
 from abc import ABC, abstractmethod
 from collections import defaultdict
 
@@ -7,7 +8,7 @@ from .errors import TemplateCheckError
 class TemplateCheckErrorManager(ABC):
 
     @abstractmethod
-    def register_error(self, error: TemplateCheckError):
+    def register_error(self, error: TemplateCheckError) -> None:
         pass
 
 
@@ -17,22 +18,35 @@ class TemplateCheckErrorCollection(TemplateCheckErrorManager):
     def __init__(self):
         self.groups = defaultdict(list)
 
-    def __iter__(self,):
+    def __iter__(self,) -> typing.Iterator[TemplateCheckError]:
         return (
             error
             for error_group in self.groups.values()
             for error in error_group
         )
 
-    def register_error(self, error: TemplateCheckError):
+    def __len__(self,) -> int:
+        return self.count
+
+    def __bool__(self,) -> bool:
+        return self.no_errors
+
+    def __repr__(self) -> str:
+        return '\n'.join(error.colored for error in self)
+
+    def register_error(self, error: TemplateCheckError) -> None:
         """ Add an error to the collection. """
         self.groups[type(error)].append(error)
 
-    def print_errors(self):
-        """ Print the collected errors to the user. """
+    @property
+    def count(self,) -> int:
+        """ Returns the number of registered errors """
+        return len([error for error in self])
 
-        for error in self:
-            print(error.colored_description)
+    @property
+    def no_errors(self,) -> bool:
+        """ Returns `True` only if there are zero errors registered. """
+        return self.count == 0
 
 
 class TemplateCheckRaiseOnError(TemplateCheckErrorManager):
