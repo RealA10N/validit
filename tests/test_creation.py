@@ -29,3 +29,25 @@ class TestBaseTemplate:
         """ Test that a template constractor provided with one or more types
         can be initialized without errors. """
         Template(*types)
+
+
+class TestTemplateDict:
+
+    @pytest.mark.parametrize('template', (
+        {'username': Template(str)},
+        {
+            'name': Template(str),
+            'id': Template(int),
+            'height': Template(int, float),
+        },
+    ))
+    def test_dict_template_creation(self, template):
+        TemplateDict(**template)
+
+    @pytest.mark.parametrize('template', (
+        {'typeNotTemplate': str},
+        {'instance': 'hello!'},
+    ))
+    def test_dict_template_fails(self, template):
+        with pytest.raises(InvalidTemplateConfiguration):
+            TemplateDict(**template)
