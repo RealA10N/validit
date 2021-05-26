@@ -17,6 +17,13 @@ class TemplateCheckErrorCollection(TemplateCheckErrorManager):
     def __init__(self):
         self.groups = defaultdict(list)
 
+    def __iter__(self,):
+        return (
+            error
+            for error_group in self.groups.values()
+            for error in error_group
+        )
+
     def register_error(self, error: TemplateCheckError):
         """ Add an error to the collection. """
         self.groups[type(error)].append(error)
@@ -24,9 +31,8 @@ class TemplateCheckErrorCollection(TemplateCheckErrorManager):
     def print_errors(self):
         """ Print the collected errors to the user. """
 
-        for error_group in self.groups.values():
-            for error in error_group:
-                print(error.colored_description)
+        for error in self:
+            print(error.colored_description)
 
 
 class TemplateCheckRaiseOnError(TemplateCheckErrorManager):
