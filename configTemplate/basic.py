@@ -22,22 +22,15 @@ classname = lambda instance: type(instance).__name__
 
 class Template:
 
-    def __init__(self, *valid_types: typing.Union[type, 'Template']):
-        self.base_types, self.templates = set(), set()
+    def __init__(self, *types: type):
+        self.types = types
 
-        for type_ in valid_types:
-            if isinstance(type_, type):
-                # If a basic type like `str`, `int`, etc.
-                self.base_types.add(type_)
-
-            elif isinstance(type_, Template):
-                # If an instance of a Template
-                self.templates.add(type_)
-
-            else:
+        for type_ in types:
+            if not isinstance(type_, type):
+                # If not a basic type like `str`, `int`, etc.
                 raise InvalidTemplateConfiguration(
-                    "Accepted templates are object types and other template " +
-                    f"instances, not '{classname(type_)}'"
+                    "The 'Template' constructor accepts object types, " +
+                    f"not '{classname(type_)}'"
                 )
 
     def check(self,
@@ -46,41 +39,36 @@ class Template:
               errors: ErrorManager = ErrorCollection(),
               ) -> ErrorManager:
 
-        # Basic type check
-        if isinstance(data, tuple(self.base_types)):
-            # If one of the accepted basic types, accepts it immediately and
-            # doesn't raise an error.
-            return
-
-        # Template types check
-        for template in self.templates:
-            try: template.check(data)
-            except TemplateCheckError: continue  # If check fails -> tries next template
-            else: return  # If check passed successfully -> exits current check
-
-        # If both checks failed, raise an error
-        errors.register_error(TemplateCheckInvalidDataError(
-            path=path,
-            expected=self.base_types | self.templates,
-            got=data,
-        ))
+        if not isinstance(data, self.types):
+            # If the given data is not an instance of the allowed types,
+            # an error is registered.
+            errors.register_error(TemplateCheckInvalidDataError(
+                path=path,
+                expected=self.types,
+                got=data,
+            ))
 
         return errors
 
 
 class TemplateList(Template):
 
-    def __init__(self, *valid_types, length: range = None):
+    def __init__(self, element_template: Template, length: range = None):
         super().__init__(list, tuple)
-        self.element_template = Template(*valid_types)
+        self.element_template = element_template
+        self.length = length
+
+        if not isinstance(element_template, Template):
+            raise InvalidTemplateConfiguration(
+                "The 'TemplateList' constructor recives a template instance, " +
+                f'not {classname(element_template)}'
+            )
 
         if length is not None and not isinstance(length, range):
             raise InvalidLengthRange(
                 "List length should be a 'range' instance, " +
                 f"not '{classname(length)}'"
             )
-
-        self.length = length
 
     def check(self,
               data: typing.Any,
