@@ -1,1 +1,24 @@
-![Config Template - Easily define configuration file structues, and ceck if a given configuration file matches the template.](https://raw.githubusercontent.com/RealA10N/configTemplate/master/assets/configTemplateBanner.png)
+[![Build](https://github.com/RealA10N/configTemplate/actions/workflows/build.yaml/badge.svg)](https://github.com/RealA10N/configTemplate/actions/workflows/build.yaml)
+
+# configTemplate
+
+**Easily define configuration file structures, and check if a given
+configuration file matches the template.**
+
+## Usage
+
+## Installation
+
+**configTemplate** is tested on CPython 3.6, 3.7, 3.8 and 3.9.
+
+Basic installation:
+
+```bash
+pip install configTemplate
+```
+
+To support YAML configuration files, install using:
+
+```bash
+pip install configTemplate[yaml]
+```
