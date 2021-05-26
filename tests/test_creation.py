@@ -50,7 +50,31 @@ class TestTemplateDict:
     @pytest.mark.parametrize('template', (
         {'typeNotTemplate': str},
         {'instance': 'hello!'},
+        {'string': Template(str),
+         'object': ExampleObj,
+         }
     ))
     def test_creation_fails(self, template):
         with pytest.raises(InvalidTemplateConfiguration):
             TemplateDict(**template)
+
+
+class TestTemplateList:
+
+    @pytest.mark.parametrize('template', (
+        (int,),
+        (str,),
+        (int, float, complex),
+        (str, ExampleObj, AnotherObj),
+    ))
+    def test_creation(self, template):
+        TemplateList(*template)
+
+    @pytest.mark.parametrize('template', (
+        (complex, int, 3.23),
+        ('astring',),
+        (ExampleObj, SonOfExample(), AnotherObj,),
+    ))
+    def test_creation_fails(self, template):
+        with pytest.raises(InvalidTemplateConfiguration):
+            TemplateList(*template)
