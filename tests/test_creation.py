@@ -71,6 +71,8 @@ class TestTemplateList:
         Template(str),
         Template(int, float, complex),
         Template(str, ExampleObj, AnotherObj),
+        TemplateDict(username=Template(str), secretcode=Template(int)),
+        TemplateList(Template(int)),
     ))
     def test_creation(self, template):
         TemplateList(template)

@@ -5,6 +5,8 @@ from configTemplate import Template, TemplateList, TemplateDict
 from configTemplate.error_managers import TemplateCheckRaiseOnError
 from configTemplate.errors import (
     TemplateCheckInvalidDataError as WrongTypeError,
+    TemplateCheckMissingDataError as MissingDataError,
+    TemplateCheckListLengthError as ListLengthError,
 )
 
 
@@ -43,6 +45,56 @@ checks = [
             ),
         },
     },
+    {
+        'template': TemplateDict(
+            username=Template(str),
+            code=Template(int),
+        ),
+        'checks': {
+            None: (
+                {'username': 'RealA10N', 'code': 123},
+                {'username': '', 'code': 0, ExampleObj: AnotherObj()},
+            ),
+            WrongTypeError: (
+                {'username': 'RealA10N', 'code': '123'},
+                {'code': 123, 'username': str},
+            ),
+            MissingDataError: (
+                dict(),
+                {'code': 123},
+            )
+        }
+    },
+    {
+        'template': TemplateList(TemplateDict(
+            username=Template(str),
+            code=Template(int),
+        )),
+        'checks': {
+            None: (
+                list(),
+                [
+                    {'username': 'RealA10N', 'code': 123},
+                    {'username': 'elonmusk', 'code': 42069},
+                ],
+            ),
+            WrongTypeError: (
+                {'username': 'RealA10N', 'code': 123},
+                [ExampleObj()],
+                [
+                    {'username': 'RealA10N', 'code': 123},
+                    {'username': 'elonmusk', 'code': 12.34},
+                ],
+            ),
+            MissingDataError: (
+                [{'username': 'RealA10N'}],
+                [
+                    {'username': 'RealA10N', 'code': 123},
+                    {'code': 456},
+                ],
+            )
+        }
+    }
 ]
 
 
