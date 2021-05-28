@@ -34,10 +34,7 @@ class TemplateCheckErrorCollection(TemplateCheckErrorManager):
     def __repr__(self) -> str:
         """ Returns a colored string that shows the results of the check """
         if self.no_errors:
-            return colored(
-                'Data check resulted in ZERO errors!',
-                'green', attrs=('bold',)
-            )
+            return colored('Data check passed successfully', 'green',)
         return '\n'.join(error.colored for error in self)
 
     @property

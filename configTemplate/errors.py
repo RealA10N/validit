@@ -32,8 +32,7 @@ class TemplateCheckError(Exception):
     def colored(self,) -> str:
         """ Generates and returns a colors string that represents the current
         template check error. """
-        msg = colored(f'{self.path_str} ', 'yellow',
-                      attrs=['bold']) if self.path else str()
+        msg = colored(f'{self.path_str} ', 'yellow') if self.path else str()
         msg += colored(self.msg, 'red') if self.msg else str()
         return msg
 
