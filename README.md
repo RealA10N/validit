@@ -11,14 +11,8 @@ configuration file matches the template.
 
 **configTemplate** is tested on CPython 3.6, 3.7, 3.8 and 3.9.
 
-Basic installation:
+Simply install using pip:
 
 ```bash
 pip install configTemplate
-```
-
-To support YAML configuration files, install using:
-
-```bash
-pip install configTemplate[yaml]
 ```

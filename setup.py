@@ -8,7 +8,8 @@ def load_readme():
 
 def load_requirements():
     return (
-        'termcolor==1.1.0',
+        'termcolor==1.1.0',     # colored outputs
+        'pyyaml>=5.4, <5.5',    # for loading YAML files
     )
 
 
@@ -17,9 +18,6 @@ def load_extras_require():
         'dev': (
             'pytest>=6.2, <6.3',
             'flake8>=3.9, <3.10'
-        ),
-        'yaml': (
-            'pyyaml>=5.4, <5.5',
         ),
     }
 
