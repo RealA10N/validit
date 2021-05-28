@@ -19,7 +19,7 @@ class TemplateFileLoader(ABC):
         self._template = template
         self._fp = fp
         self._title = title
-        self._data, self._errors = None, None
+        self._data, self._errors, self._load_error = None, None, None
 
     @property
     def data(self):
@@ -38,18 +38,17 @@ class TemplateFileLoader(ABC):
         """ Returns a string colored that represents the template error check
         results and errors with the given data. """
 
+        additional = colored(self._title, 'cyan') + ' ' if self._title else ''
+
+        if self._load_error:
+            return additional + colored(self._load_error, 'red')
+
         errors_str = self.errors.__repr__()
 
-        if not self._title:
-            return errors_str
-
-        additional = colored(self._title, 'cyan')
-        lines = [
-            additional + ' ' + line
+        return '\n'.join(
+            additional + line
             for line in errors_str.splitlines()
-        ]
-
-        return '\n'.join(lines)
+        )
 
 
 class JsonFileLoader(TemplateFileLoader):
@@ -63,7 +62,11 @@ class JsonFileLoader(TemplateFileLoader):
         it is a json file. Automatically runs a template data check with the
         given template, and saves the error returns in the `errors` property. """
         super().__init__(template, fp, title=title)
-        self._data = json.load(fp)
+
+        try: self._data = json.load(fp)
+        except json.JSONDecodeError:
+            self._load_error = 'failed to parse JSON file'
+
         self._errors = template.check(self._data)
 
 
@@ -78,5 +81,9 @@ class YamlFileLoader(TemplateFileLoader):
         it is a yaml file. Automatically runs a template data check with the
         given template, and saves the error returns in the `errors` property. """
         super().__init__(template, fp, title=title)
-        self._data = yaml.full_load(fp)
+
+        try: self._data = yaml.full_load(fp)
+        except yaml.YAMLError:
+            self._load_error = 'failed to parse YAML file'
+
         self._errors = template.check(self._data)
