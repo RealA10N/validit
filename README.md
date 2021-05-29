@@ -1,12 +1,12 @@
 # configTemplate
 
 [![Build](https://github.com/RealA10N/configTemplate/actions/workflows/build.yaml/badge.svg)](https://github.com/RealA10N/configTemplate/actions/workflows/build.yaml)
-![PyPI](https://img.shields.io/pypi/v/configTemplate)
-![PyPI - Python Version](https://img.shields.io/pypi/pyversions/configTemplate)
-![GitHub Repo stars](https://img.shields.io/github/stars/reala10n/configTemplate?style=social)
+[![PyPI](https://img.shields.io/pypi/v/configTemplate)](https://pypi.org/project/configTemplate/)
+[![PyPI - Python Version](https://img.shields.io/pypi/pyversions/configTemplate)](https://pypi.org/project/configTemplate/)
+[![GitHub Repo stars](https://img.shields.io/github/stars/reala10n/configTemplate?style=social)](https://github.com/RealA10N/configTemplate)
 
-Easily define configuration file structures, and check if a given
-configuration file matches the template.
+_Easily define configuration file structures, and check if a given
+configuration file matches the template._
 
 ## Installation
 
