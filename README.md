@@ -1,9 +1,22 @@
 # configTemplate
 
 [![Build](https://github.com/RealA10N/configTemplate/actions/workflows/build.yaml/badge.svg)](https://github.com/RealA10N/configTemplate/actions/workflows/build.yaml)
+![PyPI](https://img.shields.io/pypi/v/configTemplate)
+![PyPI - Python Version](https://img.shields.io/pypi/pyversions/configTemplate)
+![GitHub Repo stars](https://img.shields.io/github/stars/reala10n/configTemplate?style=social)
 
 Easily define configuration file structures, and check if a given
 configuration file matches the template.
+
+## Installation
+
+**configTemplate** is tested on CPython 3.6, 3.7, 3.8 and 3.9.
+
+Simply install using pip:
+
+```bash
+pip install configTemplate
+```
 
 ## Usage
 
@@ -36,14 +49,4 @@ if errors:
 
 else:
     print('data follows the template!')
-```
-
-## Installation
-
-**configTemplate** is tested on CPython 3.6, 3.7, 3.8 and 3.9.
-
-Simply install using pip:
-
-```bash
-pip install configTemplate
 ```
