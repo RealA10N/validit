@@ -12,10 +12,12 @@ from .errors import (
 )
 
 from .error_managers import (
-    TemplateCheckErrorManager as ErrorManager,
+    TemplateCheckErrorManager,
     TemplateCheckErrorCollection as ErrorCollection,
     TemplateCheckRaiseOnError as RaiseOnErrorManager,
 )
+
+ErrorManager = typing.TypeVar('ErrorManager', bound=TemplateCheckErrorManager)
 
 classname = lambda instance: type(instance).__name__
 
