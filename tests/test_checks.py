@@ -98,15 +98,17 @@ checks = [
 ]
 
 
-params = list()
-for test in checks:
-    template = test['template']
-    for error in test['checks']:
-        for data in test['checks'][error]:
-            params.append((template, data, error))
+def generate_params():
+    params = list()
+    for test in checks:
+        template = test['template']
+        for error in test['checks']:
+            for data in test['checks'][error]:
+                params.append((template, data, error))
+    return params
 
 
-@ pytest.mark.parametrize('template, data, error', params)
+@pytest.mark.parametrize('template, data, error', generate_params())
 def test_check_first_error(
         template: Template,
         data: typing.Any,
