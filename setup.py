@@ -34,14 +34,14 @@ def load_extras_require():
 setup(
     name='configTemplate',
     description='Easily define and check configuration file structures',
-    version='0.0.1',
+    version='0.1.0',
     author='RealA10N',
     author_email='downtown2u@gmail.com',
     long_description=load_readme(),
     long_description_content_type='text/markdown',
     url='https://github.com/RealA10N/configTemplate',
     classifiers=[
-        'Development Status :: 3 - Alpha',
+        'Development Status :: 4 - Beta',
         'Programming Language :: Python :: 3',
         'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: 3.7',
