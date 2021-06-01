@@ -8,6 +8,8 @@
 _Easily define configuration file structures, and check if a given
 configuration file matches the template._
 
+![configTemplate example use case](https://raw.githubusercontent.com/RealA10N/configTemplate/master/assets/templateExample.png)
+
 ## Installation
 
 **configTemplate** is tested on CPython 3.6, 3.7, 3.8 and 3.9.
