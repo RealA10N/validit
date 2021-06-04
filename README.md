@@ -21,18 +21,19 @@ pip install configTemplate
 ## Usage
 
 To create a template, you will need the basic `Template` module, and usually the
-other two basic modules `TemplateList` and `TemplateDict`.
+other three basic modules `TemplateList`, `TemplateDict` and `TemplateOptional`.
 
 ```python
-from configTemplate import Template, TemplateList, TemplateDict
+from configTemplate import Template, TemplateList, TemplateDict, TemplateOptional
 ```
 
 Now, lets create a basic template that represents a single user:
 
 ```python
-TemplateUser = TemplateDict(    # a dictionary with 2 required values
-    username=Template(str),     # username must be a string
-    passcode=Template(int, str) # can be a string or an integer.
+TemplateUser = TemplateDict(        # a dictionary with 2 required values
+    username=Template(str),         # username must be a string
+    passcode=Template(int, str),    # can be a string or an integer.
+    nickname=TemplateOptional(str), # optional - if provided, must be a string.
 )
 ```
 
