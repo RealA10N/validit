@@ -22,6 +22,10 @@ ErrorManager = typing.TypeVar('ErrorManager', bound=TemplateCheckErrorManager)
 classname = lambda instance: type(instance).__name__
 
 
+class DefaultValue:
+    def __repr__(self): return "DefaultValue"
+
+
 class Template:
 
     def __init__(self, *types: type):
@@ -41,7 +45,7 @@ class Template:
               errors: ErrorManager = ErrorCollection(),
               ) -> ErrorManager:
 
-        if data is None:
+        if data is DefaultValue:
             errors.register_error(TemplateCheckMissingDataError(path))
 
         elif not isinstance(data, self.types):
@@ -158,7 +162,7 @@ class TemplateDict(Template):
         else:
             for key, template in self.template.items():
                 cur_path = path + (key,)
-                cur_data = data.get(key)
+                cur_data = data.get(key, DefaultValue)
                 template.check(cur_data, cur_path, errors)
 
         return errors
