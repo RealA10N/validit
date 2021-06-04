@@ -1,7 +1,7 @@
 """ Test the creation of a template structure. """
 
 import pytest
-from configTemplate import Template, TemplateDict, TemplateList
+from configTemplate import Template, TemplateDict, TemplateList, TemplateOptional
 from configTemplate.exceptions import (
     InvalidTemplateConfiguration,
     InvalidLengthRange,
@@ -13,30 +13,50 @@ class SonOfExample(ExampleObj): pass
 class AnotherObj: pass
 
 
+VALID_BASE_TYPES = (
+    (ExampleObj,),
+    (int, float, complex),
+    (str, bool, AnotherObj),
+    (ExampleObj, SonOfExample, AnotherObj),
+)
+
+INVALID_TYPES = (
+    1, str(), bool(), ExampleObj(), SonOfExample(),
+    (str, int()),
+    (bool, int, float, 'str'),
+    (AnotherObj, ExampleObj(), SonOfExample()),
+)
+
+
 class TestBaseTemplate:
 
-    @pytest.mark.parametrize('template', (
-        (ExampleObj,),
-        (int, float, complex),
-        (str, bool, AnotherObj),
-        (ExampleObj, SonOfExample, AnotherObj),
-    ))
+    @pytest.mark.parametrize('template', VALID_BASE_TYPES)
     def test_creation(self, template):
         """ Test that a template constractor provided with one or more types
         can be initialized without errors. """
         Template(*template)
 
-    @pytest.mark.parametrize('template', (
-        1, str(), bool(), ExampleObj(), SonOfExample(),
-        (str, int()),
-        (bool, int, float, 'str'),
-        (AnotherObj, ExampleObj(), SonOfExample()),
-    ))
+    @pytest.mark.parametrize('template', INVALID_TYPES)
     def test_creation_fails(self, template):
         """ Test that a template of instance (and not a type) raises an
         error. """
         with pytest.raises(InvalidTemplateConfiguration):
             Template(template)
+
+
+class TestTemplateOptional:
+    @pytest.mark.parametrize('template', VALID_BASE_TYPES)
+    def test_creation(self, template):
+        """ Test that a template constractor provided with one or more types
+        can be initialized without errors. """
+        TemplateOptional(*template)
+
+    @pytest.mark.parametrize('template', INVALID_TYPES)
+    def test_creation_fails(self, template):
+        """ Test that a template of instance (and not a type) raises an
+        error. """
+        with pytest.raises(InvalidTemplateConfiguration):
+            TemplateOptional(template)
 
 
 class TestTemplateDict:
