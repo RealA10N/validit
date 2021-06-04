@@ -61,9 +61,9 @@ If you are planning to use **configTemplate** as a dependency for your project,
 we highly recommend to specify the exact version of the module you are using
 in the `requirements.txt` file or `setup.py` scripts.
 
-For example, to pinpoint version _v0.1.0_ use the following line in your
+For example, to pinpoint version _v0.2.0_ use the following line in your
 `requirements.txt` file:
 
 ```pip requirements
-configTemplate==0.1.0
+configTemplate==0.2.0
 ```
