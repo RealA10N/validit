@@ -41,7 +41,10 @@ class Template:
               errors: ErrorManager = ErrorCollection(),
               ) -> ErrorManager:
 
-        if not isinstance(data, self.types):
+        if data is None:
+            errors.register_error(TemplateCheckMissingDataError(path))
+
+        elif not isinstance(data, self.types):
             # If the given data is not an instance of the allowed types,
             # an error is registered.
             errors.register_error(TemplateCheckInvalidDataError(
@@ -51,6 +54,19 @@ class Template:
             ))
 
         return errors
+
+
+class TemplateOptional(Template):
+
+    def check(self,
+              data: typing.Any,
+              path: typing.Tuple[str] = tuple(),
+              errors: ErrorManager = ErrorCollection(),
+              ) -> ErrorManager:
+        if data is not None:
+            # Only preforms the check if the data is provided.
+            # if data is not given (data=None), skips the check!
+            super().check(data, path, errors)
 
 
 class TemplateList(Template):
@@ -140,12 +156,9 @@ class TemplateDict(Template):
             errors.register_error(error)
 
         else:
-            for key in self.template:
+            for key, template in self.template.items():
                 cur_path = path + (key,)
-                if key not in data:
-                    errors.register_error(
-                        TemplateCheckMissingDataError(cur_path))
-                else:
-                    self.template[key].check(data[key], cur_path, errors)
+                cur_data = data.get(key)
+                template.check(cur_data, cur_path, errors)
 
         return errors
