@@ -23,6 +23,9 @@ classname = lambda instance: type(instance).__name__
 
 
 class DefaultValue:
+    """ A default value used in the `TemplateDict` object to indicate that the
+    key is missing in the given data. """
+
     def __repr__(self): return "DefaultValue"
 
 
