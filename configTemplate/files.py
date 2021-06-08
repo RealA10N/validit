@@ -3,6 +3,8 @@ from abc import ABC, abstractmethod
 
 import json
 import yaml
+import toml
+
 from termcolor import colored
 
 from . import Template
@@ -85,5 +87,24 @@ class YamlFileLoader(TemplateFileLoader):
         try: self._data = yaml.full_load(fp)
         except yaml.YAMLError:
             self._load_error = 'failed to parse YAML file'
+
+        self._errors = template.check(self._data)
+
+
+class TomlFileLoader(TemplateFileLoader):
+
+    def __init__(self,
+                 template: Template,
+                 fp: typing.TextIO,
+                 title: str = None,
+                 ) -> None:
+        """ Recives a file text stream and loads the data from the stream as if
+        it is a yaml file. Automatically runs a template data check with the
+        given template, and saves the error returns in the `errors` property. """
+        super().__init__(template, fp, title=title)
+
+        try: self._data = toml.load(fp)
+        except toml.decoder.TomlDecodeError:
+            self._load_error = 'failed to parse TOML file'
 
         self._errors = template.check(self._data)

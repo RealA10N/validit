@@ -10,6 +10,7 @@ def load_requirements():
     return (
         'termcolor==1.1.0',     # colored outputs
         'pyyaml>=5.4, <5.5',    # for loading YAML files
+        'toml>=0.10.2, <0.11',  # for loading TOML files
     )
 
 
