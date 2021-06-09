@@ -6,31 +6,32 @@ def load_readme():
         return readme.read()
 
 
-def load_requirements():
-    return (
-        'termcolor==1.1.0',     # colored outputs
-        'pyyaml>=5.4, <5.5',    # for loading YAML files
-        'toml>=0.10.2, <0.11',  # for loading TOML files
-    )
+REQUIRES = (
+    'termcolor==1.1.0',
+)
 
 
-def load_extras_require():
-    requires = {
-        'dev': (
-            'pytest>=6.2, <6.3',
-            'flake8>=3.9, <3.10'
-        ),
-    }
+EXTRAS = {
+    'dev': (
+        'pytest>=6.2, <6.3',
+        'flake8>=3.9, <3.10'
+    ),
+    'yaml': (
+        'pyyaml>=5.4, <5.5',
+    ),
+    'toml': (
+        'toml>=0.10.2, <0.11',
+    ),
+}
 
-    # Add all required packages to 'dev'
-    requires['dev'] = tuple(
-        package
-        for group in requires.values()
-        for package in group
-    )
+EXTRAS['all'] = tuple(
+    package
+    for group in EXTRAS
+    if group != 'dev'
+    for package in EXTRAS[group]
+)
 
-    return requires
-
+EXTRAS['dev'] += EXTRAS['all']
 
 setup(
     name='configTemplate',
@@ -52,6 +53,6 @@ setup(
     ],
     packages=find_packages(),
     python_requires='>=3.6',
-    install_requires=load_requirements(),
-    extras_require=load_extras_require(),
+    install_requires=REQUIRES,
+    extras_require=EXTRAS,
 )
