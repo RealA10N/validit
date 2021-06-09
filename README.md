@@ -18,6 +18,26 @@ Simply install using pip:
 pip install configTemplate
 ```
 
+### Support for additional file formats
+
+By default, _configTemplate_ only supports `json` configuration files, or
+already loaded data (not directly from a configuration file). However, using
+additional dependencies, _configTemplate_ supports the following file formats:
+
+- json
+- yaml
+- toml
+
+To install _configTemplate_ with the additional required dependencies to support
+your preferred file format, use:
+
+```yaml
+pip install configTemplate[yaml]        # install dependencies for yaml files
+pip install configTemplate[toml]        # toml files
+pip install configTemplate[json,toml]   # json and toml files
+pip install configTemplate[all]         # all available file formats
+```
+
 ## Usage
 
 To create a template, you will need the basic `Template` module, and usually the
@@ -64,6 +84,7 @@ in the `requirements.txt` file or `setup.py` scripts.
 For example, to pinpoint version _v0.2.0_ use the following line in your
 `requirements.txt` file:
 
-```pip requirements
+```yaml
 configTemplate==0.2.0
+configTemplate[yaml]==0.2.0     # If using extra file formats
 ```
