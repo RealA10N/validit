@@ -1,17 +1,18 @@
 import typing
-from abc import ABC, abstractmethod
-
-import json
-import yaml
-import toml
+from abc import ABC
 
 from termcolor import colored
 
-from . import Template
-from .error_managers import TemplateCheckErrorCollection as ErrorCollection
+from configTemplate import Template
+from configTemplate.error_managers import TemplateCheckErrorCollection as ErrorCollection
+from configTemplate.exceptions import MissingExtras
+
+from .extras import ExtraModules
 
 
 class TemplateFileLoader(ABC):
+
+    _EXTRAS: ExtraModules
 
     def __init__(self,
                  template: Template,
@@ -22,6 +23,8 @@ class TemplateFileLoader(ABC):
         self._fp = fp
         self._title = title
         self._data, self._errors, self._load_error = None, None, None
+
+        self._EXTRAS.iimport()
 
     @property
     def data(self):
@@ -55,6 +58,12 @@ class TemplateFileLoader(ABC):
 
 class JsonFileLoader(TemplateFileLoader):
 
+    _EXTRAS = ExtraModules(
+        class_name='JsonFileLoader',
+        extra_name='json',
+        module_names=['json', ]
+    )
+
     def __init__(self,
                  template: Template,
                  fp: typing.TextIO,
@@ -64,6 +73,7 @@ class JsonFileLoader(TemplateFileLoader):
         it is a json file. Automatically runs a template data check with the
         given template, and saves the error returns in the `errors` property. """
         super().__init__(template, fp, title=title)
+        json = self._EXTRAS.json
 
         try: self._data = json.load(fp)
         except json.JSONDecodeError:
@@ -74,6 +84,12 @@ class JsonFileLoader(TemplateFileLoader):
 
 class YamlFileLoader(TemplateFileLoader):
 
+    _EXTRAS = ExtraModules(
+        class_name='YamlFileLoader',
+        extra_name='yaml',
+        module_names=['yaml', ]
+    )
+
     def __init__(self,
                  template: Template,
                  fp: typing.TextIO,
@@ -83,6 +99,7 @@ class YamlFileLoader(TemplateFileLoader):
         it is a yaml file. Automatically runs a template data check with the
         given template, and saves the error returns in the `errors` property. """
         super().__init__(template, fp, title=title)
+        yaml = self._EXTRAS.yaml
 
         try: self._data = yaml.full_load(fp)
         except yaml.YAMLError:
@@ -93,6 +110,12 @@ class YamlFileLoader(TemplateFileLoader):
 
 class TomlFileLoader(TemplateFileLoader):
 
+    _EXTRAS = ExtraModules(
+        class_name='TomlFileLoader',
+        extra_name='toml',
+        module_names=['toml', ]
+    )
+
     def __init__(self,
                  template: Template,
                  fp: typing.TextIO,
@@ -102,6 +125,7 @@ class TomlFileLoader(TemplateFileLoader):
         it is a yaml file. Automatically runs a template data check with the
         given template, and saves the error returns in the `errors` property. """
         super().__init__(template, fp, title=title)
+        toml = self._EXTRAS.toml
 
         try: self._data = toml.load(fp)
         except toml.decoder.TomlDecodeError:
