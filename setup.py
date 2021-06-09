@@ -36,7 +36,7 @@ EXTRAS['dev'] += EXTRAS['all']
 setup(
     name='configTemplate',
     description='Easily define and check configuration file structures 📂🍒',
-    version='0.2.0',
+    version='0.3.0',
     author='RealA10N',
     author_email='downtown2u@gmail.com',
     long_description=load_readme(),

@@ -11,7 +11,6 @@ configuration file matches the template._
 ## Installation
 
 **configTemplate** is tested on CPython 3.6, 3.7, 3.8 and 3.9.
-
 Simply install using pip:
 
 ```bash
@@ -81,10 +80,10 @@ If you are planning to use **configTemplate** as a dependency for your project,
 we highly recommend to specify the exact version of the module you are using
 in the `requirements.txt` file or `setup.py` scripts.
 
-For example, to pinpoint version _v0.2.0_ use the following line in your
+For example, to pinpoint version _v0.3.0_ use the following line in your
 `requirements.txt` file:
 
 ```yaml
-configTemplate==0.2.0
-configTemplate[yaml]==0.2.0     # If using extra file formats
+configTemplate==0.3.0
+configTemplate[yaml]==0.3.0     # If using extra file formats
 ```
