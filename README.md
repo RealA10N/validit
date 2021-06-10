@@ -1,6 +1,6 @@
 # configTemplate
 
-[![Build](https://github.com/RealA10N/configTemplate/actions/workflows/build.yaml/badge.svg)](https://github.com/RealA10N/configTemplate/actions/workflows/build.yaml)
+[![Test](https://img.shields.io/github/workflow/status/reala10n/configtemplate/%E2%9C%94%20Test?label=test)](https://github.com/RealA10N/configTemplate/actions/workflows/test.yaml)
 [![PyPI](https://img.shields.io/pypi/v/configTemplate)](https://pypi.org/project/configTemplate/)
 [![PyPI - Python Version](https://img.shields.io/pypi/pyversions/configTemplate)](https://pypi.org/project/configTemplate/)
 [![GitHub Repo stars](https://img.shields.io/github/stars/reala10n/configTemplate?style=social)](https://github.com/RealA10N/configTemplate)
