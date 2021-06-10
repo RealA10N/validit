@@ -70,7 +70,7 @@ class TemplateOptional(Template):
               path: typing.Tuple[str] = tuple(),
               errors: ErrorManager = ErrorCollection(),
               ) -> ErrorManager:
-        if data is not None:
+        if data is not DefaultValue:
             # Only preforms the check if the data is provided.
             # if data is not given (data=None), skips the check!
             super().check(data, path, errors)

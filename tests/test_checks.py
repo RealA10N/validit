@@ -1,7 +1,7 @@
 import typing
 
 import pytest
-from configTemplate import Template, TemplateList, TemplateDict
+from configTemplate import Template, TemplateList, TemplateDict, TemplateOptional
 from configTemplate.error_managers import TemplateCheckRaiseOnError
 from configTemplate.errors import (
     TemplateCheckInvalidDataError as WrongTypeError,
@@ -92,6 +92,25 @@ checks = [
                     {'username': 'RealA10N', 'code': 123},
                     {'code': 456},
                 ],
+            )
+        }
+    },
+    {
+        'template': TemplateDict(
+            username=Template(str),
+            nickname=TemplateOptional(str),
+        ),
+        'checks': {
+            None: (
+                {'username': 'RealA10N', 'nickname': 'Alon'},
+                {'username': 'RealA10N'},
+            ),
+            WrongTypeError: (
+                {'username': 'RealA10N', 'nickname': 123},
+                {'username': 123},
+            ),
+            MissingDataError: (
+                {'nickname': 'Alon'},
             )
         }
     }
