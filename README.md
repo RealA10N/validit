@@ -80,10 +80,10 @@ If you are planning to use **configTemplate** as a dependency for your project,
 we highly recommend specifying the exact version of the module you are using
 in the `requirements.txt` file or `setup.py` scripts.
 
-For example, to pinpoint version _v0.3.1_ use the following line in your
+For example, to pinpoint version _v0.3.2_ use the following line in your
 `requirements.txt` file:
 
 ```yaml
-configTemplate==0.3.1
-configTemplate[yaml]==0.3.1     # If using extra file formats
+configTemplate==0.3.2
+configTemplate[yaml]==0.3.2     # If using extra file formats
 ```
