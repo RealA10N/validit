@@ -40,7 +40,7 @@ class Template(BaseTemplate):
                 )
 
     def check(self,
-              data: typing.Any,
+              data: typing.Any = DefaultValue,
               path: typing.Tuple[str] = tuple(),
               errors: ErrorManager = ErrorCollection(),
               ) -> ErrorManager:
@@ -72,7 +72,7 @@ class Optional(BaseTemplate):
             )
 
     def check(self,
-              data: typing.Any,
+              data: typing.Any = DefaultValue,
               path: typing.Tuple[str] = tuple(),
               errors: ErrorManager = ErrorCollection(),
               ) -> ErrorManager:
@@ -80,6 +80,8 @@ class Optional(BaseTemplate):
             # Only preforms the check if the data is provided.
             # if data is not given (data=None), skips the check!
             self.__template.check(data, path, errors)
+
+        return errors
 
 
 class TemplateList(Template):
@@ -102,7 +104,7 @@ class TemplateList(Template):
             )
 
     def check(self,
-              data: typing.Any,
+              data: typing.Any = DefaultValue,
               path: typing.Tuple[str] = tuple(),
               errors: ErrorManager = ErrorCollection(),
               ) -> ErrorManager:
@@ -156,7 +158,7 @@ class TemplateDict(Template):
             )
 
     def check(self,
-              data: typing.Any,
+              data: typing.Any = DefaultValue,
               path: typing.Tuple[str] = tuple(),
               errors: ErrorManager = ErrorCollection(),
               ) -> ErrorManager:
