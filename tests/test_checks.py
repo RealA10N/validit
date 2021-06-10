@@ -118,6 +118,47 @@ checks = [
                 {'nickname': 'Alon'},
             )
         }
+    },
+    {
+        'name': 'complex-optional',
+        'template': TemplateList(TemplateDict(
+            username=Template(str),
+            realname=Optional(TemplateDict(
+                first=Template(str),
+                last=Template(str),
+            )),
+        )),
+        'checks': {
+            None: (
+                list(),
+                [{'username': 'Alon'}],
+                [
+                    {'username': 'Alon'},
+                    {'username': 'A10N', 'realname': {
+                        'first': 'Alon', 'last': 'Krymgand'}},
+                ],
+            ),
+            MissingDataError: (
+                [{'username': 'A10N', 'realname': {'first': 'Alon'}}],
+                [{'username': 'A10N', 'realname': {'last': 'Krymgand'}}],
+                [
+                    {'username': 'Alon'},
+                    {'username': 'A10N', 'realname': {'last': 'Krymgand'}}
+                ],
+                [
+                    {'username': 'Alon'},
+                    {'username': 'A10N', 'realname': {'last': 'Krymgand'}},
+                    {'username': 'A10N', 'realname': {
+                        'first': 'Alon', 'last': 'Krymgand'}},
+                ],
+            ),
+            WrongTypeError: (
+                None, dict(),
+                {'username': 'A10N'},
+                [{'username': 123}],
+                [{'username': 'A10N', 'realname': {'first': 'Alon', 'last': 123}}],
+            )
+        }
     }
 ]
 
