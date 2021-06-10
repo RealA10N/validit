@@ -17,6 +17,7 @@ class AnotherObj: pass
 
 checks = [
     {
+        'name': 'simple',
         'template': Template(str, int),
         'checks': {
             None: (
@@ -28,6 +29,7 @@ checks = [
         },
     },
     {
+        'name': 'list',
         'template': TemplateList(Template(str)),
         'checks': {
             None: (
@@ -46,6 +48,7 @@ checks = [
         },
     },
     {
+        'name': 'dict',
         'template': TemplateDict(
             username=Template(str),
             code=Template(int),
@@ -66,6 +69,7 @@ checks = [
         }
     },
     {
+        'name': 'list-of-dicts',
         'template': TemplateList(TemplateDict(
             username=Template(str),
             code=Template(int),
@@ -96,6 +100,7 @@ checks = [
         }
     },
     {
+        'name': 'optional',
         'template': TemplateDict(
             username=Template(str),
             nickname=TemplateOptional(str),
@@ -121,9 +126,13 @@ def generate_params():
     params = list()
     for test in checks:
         template = test['template']
+        name = test['name']
         for error in test['checks']:
             for data in test['checks'][error]:
-                params.append((template, data, error))
+                params.append(
+                    pytest.param(template, data, error, id=name)
+                )
+
     return params
 
 
