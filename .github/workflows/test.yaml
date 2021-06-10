@@ -1,6 +1,13 @@
 name: ✔ Test
 
-on: [push, pull_request]
+on:
+  # Only when at least one python file is changed
+
+  push:
+    paths: "**.py"
+
+  pull_request:
+    paths: "**.py"
 
 jobs:
   test:
