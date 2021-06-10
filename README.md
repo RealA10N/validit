@@ -10,7 +10,7 @@ configuration file matches the template._
 
 ## Installation
 
-**configTemplate** is tested on CPython 3.6, 3.7, 3.8 and 3.9.
+**configTemplate** is tested on CPython 3.6, 3.7, 3.8, and 3.9.
 Simply install using pip:
 
 ```bash
@@ -19,13 +19,13 @@ pip install configTemplate
 
 ### Support for additional file formats
 
-By default, _configTemplate_ only supports `json` configuration files, or
+By default, _configTemplate_ only supports `JSON` configuration files, or
 already loaded data (not directly from a configuration file). However, using
 additional dependencies, _configTemplate_ supports the following file formats:
 
-- json
-- yaml
-- toml
+- JSON
+- YAML
+- TOML
 
 To install _configTemplate_ with the additional required dependencies to support
 your preferred file format, use:
@@ -40,13 +40,13 @@ pip install configTemplate[all]         # all available file formats
 ## Usage
 
 To create a template, you will need the basic `Template` module, and usually the
-other three basic modules `TemplateList`, `TemplateDict` and `TemplateOptional`.
+other three basic modules `TemplateList`, `TemplateDict`, and `TemplateOptional`.
 
 ```python
 from configTemplate import Template, TemplateList, TemplateDict, TemplateOptional
 ```
 
-Now, lets create a basic template that represents a single user:
+Now, let's create a basic template that represents a single user:
 
 ```python
 TemplateUser = TemplateDict(        # a dictionary with 2 required values
@@ -77,7 +77,7 @@ else:
 may change substantially in the near future.
 
 If you are planning to use **configTemplate** as a dependency for your project,
-we highly recommend to specify the exact version of the module you are using
+we highly recommend specifying the exact version of the module you are using
 in the `requirements.txt` file or `setup.py` scripts.
 
 For example, to pinpoint version _v0.3.1_ use the following line in your
