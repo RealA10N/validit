@@ -1,7 +1,7 @@
 import typing
 
 import pytest
-from configTemplate import Template, TemplateList, TemplateDict, TemplateOptional
+from configTemplate import Template, TemplateList, TemplateDict, Optional
 from configTemplate.error_managers import TemplateCheckRaiseOnError
 from configTemplate.errors import (
     TemplateCheckInvalidDataError as WrongTypeError,
@@ -103,7 +103,7 @@ checks = [
         'name': 'optional',
         'template': TemplateDict(
             username=Template(str),
-            nickname=TemplateOptional(str),
+            nickname=Optional(Template(str)),
         ),
         'checks': {
             None: (

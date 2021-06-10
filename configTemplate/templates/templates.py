@@ -1,35 +1,32 @@
 import typing
-from .exceptions import (
+
+from configTemplate.error_managers import (
+    TemplateCheckErrorCollection as ErrorCollection,
+    TemplateCheckRaiseOnError as RaiseOnErrorManager,
+)
+
+from configTemplate.exceptions import (
     InvalidTemplateConfiguration,
     InvalidLengthRange,
 )
 
-from .errors import (
+from configTemplate.errors import (
     TemplateCheckError,
     TemplateCheckInvalidDataError,
     TemplateCheckMissingDataError,
     TemplateCheckListLengthError,
 )
 
-from .error_managers import (
-    TemplateCheckErrorManager,
-    TemplateCheckErrorCollection as ErrorCollection,
-    TemplateCheckRaiseOnError as RaiseOnErrorManager,
+from .base import (
+    BaseTemplate,
+    DefaultValue,
+    ErrorManager,
 )
-
-ErrorManager = typing.TypeVar('ErrorManager', bound=TemplateCheckErrorManager)
 
 classname = lambda instance: type(instance).__name__
 
 
-class DefaultValue:
-    """ A default value used in the `TemplateDict` object to indicate that the
-    key is missing in the given data. """
-
-    def __repr__(self): return "DefaultValue"
-
-
-class Template:
+class Template(BaseTemplate):
 
     def __init__(self, *types: type):
         self.types = types
@@ -63,7 +60,16 @@ class Template:
         return errors
 
 
-class TemplateOptional(Template):
+class Optional(BaseTemplate):
+
+    def __init__(self, template: Template):
+        self.__template = template
+
+        if not isinstance(template, Template):
+            raise InvalidTemplateConfiguration(
+                "The 'Optional' constructor accepts a 'Template' instance, " +
+                f"not '{classname(template)}'"
+            )
 
     def check(self,
               data: typing.Any,
@@ -73,7 +79,7 @@ class TemplateOptional(Template):
         if data is not DefaultValue:
             # Only preforms the check if the data is provided.
             # if data is not given (data=None), skips the check!
-            super().check(data, path, errors)
+            self.__template.check(data, path, errors)
 
 
 class TemplateList(Template):
@@ -138,7 +144,7 @@ class TemplateDict(Template):
         try: error_element = next(
             element
             for element in template.values()
-            if not isinstance(element, Template)
+            if not isinstance(element, BaseTemplate)
         )
 
         # If found a non template instance, raises an error
