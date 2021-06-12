@@ -1,7 +1,5 @@
 import typing
 from abc import ABC, abstractmethod
-from collections import defaultdict
-
 from termcolor import colored
 
 from .errors import TemplateCheckError
