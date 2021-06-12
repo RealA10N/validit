@@ -100,6 +100,33 @@ checks = [
         }
     },
     {
+        'name': 'list-lengths-set',
+        'template': TemplateList(Template(int, float), valid_lengths={1, 2, 3}),
+        'checks': {
+            None: (
+                [21],
+                [1, 1.2],
+                [1.23, 123, 43],
+            ),
+            ListLengthError: (
+                [],
+                [1, 2, 3, 4],
+            ),
+        },
+    },
+    {
+        'name': 'list-lengths-range',
+        'template': TemplateList(Template(int), range(0, 100, 3)),
+        'checks': {
+            None: (
+                [], [1, 1, 1], [0] * 12, [0] * 51, [0] * 99,
+            ),
+            ListLengthError: (
+                [0], [0] * 100, [0] * 31,
+            )
+        },
+    },
+    {
         'name': 'optional',
         'template': TemplateDict(
             username=Template(str),
