@@ -83,23 +83,11 @@ class TemplateCheckInvalidDataError(TemplateCheckError):
 
 
 class TemplateCheckListLengthError(TemplateCheckError):
+    """ An object that represents a template check error in which a given list
+    has an invalid length according to the template configuration. """
 
-    def __init__(self, path, expected: range, got: int):
-        self.expected = expected
-        self.got = got
-
-        super().__init__(path, msg=self._generate_error_msg())
-
-    def _generate_error_msg(self,):
-
-        first = self.expected.start
-        last = self.expected[-1]
-        steps = self.expected.step
-
-        msg = f'Allowed list length is between {first} and {last} '
-        if steps != 1:
-            msg += f'(with steps of {steps}) '
-
-        msg += f'and not {self.got}'
-
-        return msg
+    def __init__(self, path, expected: typing.Any, got: int):
+        super().__init__(
+            path,
+            f'List length {got} is not in {expected}',
+        )

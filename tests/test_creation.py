@@ -2,10 +2,7 @@
 
 import pytest
 from configTemplate import Template, TemplateDict, TemplateList, Optional
-from configTemplate.exceptions import (
-    InvalidTemplateConfiguration,
-    InvalidLengthRange,
-)
+from configTemplate.exceptions import InvalidTemplateConfiguration
 
 
 class ExampleObj: pass
@@ -115,19 +112,18 @@ class TestTemplateList:
         with pytest.raises(InvalidTemplateConfiguration):
             TemplateList(template)
 
-    @ pytest.mark.parametrize('template, length', (
-        (Template(int, float), range(10)),
-        (Template(str,), range(82)),
-        (Template(ExampleObj, AnotherObj), range(20, 32, 3)),
+    @pytest.mark.parametrize('types', VALID_BASE_TYPES)
+    @pytest.mark.parametrize('lengths', (
+        range(10), range(82), range(20, 32, 3),
+        {1, 2}, [1, 2, 3], [i for i in range(10_000)]
     ))
-    def test_length(self, template, length):
-        TemplateList(template, length=length)
+    def test_length(self, types, lengths):
+        TemplateList(Template(*types), valid_lengths=lengths)
 
-    @ pytest.mark.parametrize('template, length', (
-        (Template(int, float), 10),
-        (Template(str,), 0),
-        (Template(ExampleObj, AnotherObj), range),
+    @pytest.mark.parametrize('types', VALID_BASE_TYPES)
+    @pytest.mark.parametrize('lengths', (
+        10, 0, range,
     ))
-    def test_length_fails(self, template, length):
-        with pytest.raises(InvalidLengthRange):
-            TemplateList(template, length=length)
+    def test_length_fails(self, types, lengths):
+        with pytest.raises(InvalidTemplateConfiguration):
+            TemplateList(Template(*types), valid_lengths=lengths)

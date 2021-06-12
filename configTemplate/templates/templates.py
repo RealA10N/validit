@@ -7,7 +7,6 @@ from configTemplate.error_managers import (
 
 from configTemplate.exceptions import (
     InvalidTemplateConfiguration,
-    InvalidLengthRange,
 )
 
 from configTemplate.errors import (
@@ -21,6 +20,10 @@ from .base import (
     BaseTemplate,
     DefaultValue,
     ErrorManager,
+)
+
+from .utils import (
+    AnyLength,
 )
 
 classname = lambda instance: type(instance).__name__
@@ -86,22 +89,22 @@ class Optional(BaseTemplate):
 
 class TemplateList(Template):
 
-    def __init__(self, element_template: Template, length: range = None):
+    def __init__(self, template: Template, valid_lengths: typing.Any = AnyLength()):
         super().__init__(list, tuple)
-        self.element_template = element_template
-        self.length = length
+        self.template = template
+        self.length = valid_lengths
 
-        if not isinstance(element_template, Template):
+        if not isinstance(template, Template):
             raise InvalidTemplateConfiguration(
                 "The 'TemplateList' constructor recives a template instance, " +
-                f'not {classname(element_template)}'
+                f'not {classname(template)}'
             )
 
-        if length is not None and not isinstance(length, range):
-            raise InvalidLengthRange(
-                "List length should be a 'range' instance, " +
-                f"not '{classname(length)}'"
-            )
+        try: _ = 0 in valid_lengths
+        except TypeError as error:
+            raise InvalidTemplateConfiguration(
+                f"'{valid_lengths}' is not a valid set of list lengths"
+            ) from error
 
     def check(self,
               data: typing.Any = DefaultValue,
@@ -118,20 +121,19 @@ class TemplateList(Template):
 
         else:
 
-            if self.length is not None:
-                if len(data) not in self.length:
-                    errors.register_error(TemplateCheckListLengthError(
-                        path=path,
-                        expected=self.length,
-                        got=len(data),
-                    ))
+            if len(data) not in self.length:
+                errors.register_error(TemplateCheckListLengthError(
+                    path=path,
+                    expected=self.length,
+                    got=len(data),
+                ))
 
             # For each element in the list,
             # check if it follows the element template
             for index, element in enumerate(data):
                 # append current list index to path
                 cur_path = path + (str(index),)
-                self.element_template.check(element, cur_path, errors)
+                self.template.check(element, cur_path, errors)
 
         return errors
 
