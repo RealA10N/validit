@@ -1,3 +1,6 @@
+import typing
+from configTemplate.exceptions import MissingExtras
+
 
 class DefaultValue:
     """ A default value used in the `TemplateDict` object to indicate that the
@@ -16,3 +19,32 @@ class AnyLength:
     @staticmethod
     def __contains__(*_):
         return True
+
+
+class ExtraModules:
+    """ A helper object that imports and stores extra modules. If one or more
+    of the needed modules fails to import, raises a custom error. """
+
+    def __init__(self,
+                 class_name: str,
+                 extra_name: str,
+                 module_names: typing.List[str]
+                 ) -> None:
+        """ Tries to import the extra modules, and saves them locally.
+        If one or more of the imports fails, raises a custom error. """
+        self._modules = dict()
+
+        for module in module_names:
+            try:
+                # Try importing and saving the current module
+                self._modules[module] = __import__(module)
+
+            # If can't import, raise an error
+            except ImportError as error:
+                raise MissingExtras(
+                    f"To use the '{class_name}' object you must install additional required packages. " +
+                    f"Use 'pip install configTemplate[{extra_name}]'"
+                ) from error
+
+    def __getattr__(self, name):
+        return self._modules.get(name)
