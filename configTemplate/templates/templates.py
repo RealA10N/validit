@@ -203,6 +203,23 @@ class TemplateDict(Template):
                 f"not '{classname(error_element)}'"
             )
 
+    def container_dump(self,
+                       container: BaseContainer,
+                       data: typing.Any = DefaultValue,
+                       ) -> None:
+        container.data = dict()
+
+        if not isinstance(data, dict):
+            # If data is not a list (maybe default value)
+            # contanier will remain with an empty dict.
+            return
+
+        for key, template in self.template.items():
+            template.container_dump(
+                container=container[key],
+                data=data.get(key, DefaultValue)
+            )
+
     def check(self,
               data: typing.Any = DefaultValue,
               path: typing.Tuple[str] = tuple(),
