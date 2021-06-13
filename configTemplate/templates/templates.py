@@ -124,11 +124,11 @@ class TemplateList(Template):
                 f'not {classname(template)}'
             )
 
-        try: _ = 0 in valid_lengths
-        except TypeError as error:
+        if (not hasattr(valid_lengths, '__contains__')
+                ) or isinstance(valid_lengths, type):
             raise InvalidTemplateConfiguration(
                 f"'{valid_lengths}' is not a valid set of list lengths"
-            ) from error
+            )
 
     def container_dump(self,
                        container: BaseContainer,
