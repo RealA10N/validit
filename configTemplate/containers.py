@@ -31,7 +31,7 @@ class HeadContainer(BaseContainer):
     actually stores the data. All other instances just store pointers (in some
     way or another) to a part of the data in this container. """
 
-    def __init__(self, data: typing.Any = None):
+    def __init__(self, data: typing.Any = DefaultValue):
         self.__data = data
 
     @property
