@@ -1,5 +1,7 @@
 import typing
 
+from collections import defaultdict
+
 from configTemplate.error_managers import (
     TemplateCheckErrorCollection as ErrorCollection,
     TemplateCheckRaiseOnError as RaiseOnErrorManager,
@@ -210,9 +212,11 @@ class TemplateDict(Template):
         container.data = dict()
 
         if not isinstance(data, dict):
-            # If data is not a list (maybe default value)
-            # contanier will remain with an empty dict.
-            return
+            # If data is not a dict (maybe default value)
+            # converts the data into a dict where values for every
+            # key is 'DefaultValue'. This is useful and used for
+            # dumping optional default data to the container, for example.
+            data = defaultdict(lambda _: DefaultValue)
 
         for key, template in self.template.items():
             template.container_dump(
