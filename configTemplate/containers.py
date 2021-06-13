@@ -16,6 +16,13 @@ class BaseContainer:
     def data(self, value):
         """ Sets the data inside the container. """
 
+    @property
+    @abstractmethod
+    def path(self,) -> typing.Tuple[typing.Union[str, int]]:
+        """ Returns a tuple that represents the path taken from the head container
+        to the current one. If the current container is the head container, will
+        return an empty tuple. """
+
     def __getitem__(self, index):
         """ Returns a new container instace that represents the data in from
         the current container in the given index. """
@@ -69,6 +76,10 @@ class HeadContainer(BaseContainer):
     def data(self, value):
         self.__data = value
 
+    @property
+    def path(self,):
+        return ()
+
 
 class Container(BaseContainer):
     """ A regular container that stores data. """
@@ -91,3 +102,7 @@ class Container(BaseContainer):
     @data.setter
     def data(self, value) -> None:
         self.__parent.data[self.__chiled] = value
+
+    @property
+    def path(self,):
+        return self.__parent.path + (self.__chiled,)
