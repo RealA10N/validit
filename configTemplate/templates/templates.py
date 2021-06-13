@@ -5,10 +5,6 @@ from configTemplate.error_managers import (
     TemplateCheckRaiseOnError as RaiseOnErrorManager,
 )
 
-from configTemplate.exceptions import (
-    InvalidTemplateConfiguration,
-)
-
 from configTemplate.errors import (
     TemplateCheckError,
     TemplateCheckInvalidDataError,
@@ -22,9 +18,8 @@ from .base import (
     ErrorManager,
 )
 
-from .utils import (
-    AnyLength,
-)
+from configTemplate.exceptions import InvalidTemplateConfiguration
+from configTemplate.utils import AnyLength, DefaultValue
 
 classname = lambda instance: type(instance).__name__
 
