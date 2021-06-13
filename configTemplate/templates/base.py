@@ -24,7 +24,6 @@ class BaseTemplate(ABC):
     @abstractmethod
     def check(self,
               container: BaseContainer,
-              path: typing.Tuple[str] = tuple(),
               errors: ErrorManager = ErrorCollection(),
               ) -> ErrorManager:
         """ Preforms a validation check that validates if the given data

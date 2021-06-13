@@ -55,18 +55,19 @@ class Template(BaseTemplate):
 
     def check(self,
               container: BaseContainer,
-              path: typing.Tuple[str] = tuple(),
               errors: ErrorManager = ErrorCollection(),
               ) -> ErrorManager:
 
         if container.data is DefaultValue:
-            errors.register_error(TemplateCheckMissingDataError(path))
+            errors.register_error(
+                TemplateCheckMissingDataError(container.path)
+            )
 
         elif not isinstance(container.data, self.types):
             # If the given data is not an instance of the allowed types,
             # an error is registered.
             errors.register_error(TemplateCheckInvalidDataError(
-                path=path,
+                path=container.path,
                 expected=self.types,
                 got=container.data,
             ))
@@ -100,13 +101,12 @@ class Optional(BaseTemplate):
 
     def check(self,
               container: BaseContainer,
-              path: typing.Tuple[str] = tuple(),
               errors: ErrorManager = ErrorCollection(),
               ) -> ErrorManager:
         if container.data is not DefaultValue:
             # Only preforms the check if the data is provided.
             # if data is not given (data=Default), skips the check!
-            self.__template.check(container, path, errors)
+            self.__template.check(container, errors)
 
         return errors
 
@@ -154,13 +154,11 @@ class TemplateList(Template):
 
     def check(self,
               container: BaseContainer,
-              path: typing.Tuple[str] = tuple(),
               errors: ErrorManager = ErrorCollection(),
               ) -> ErrorManager:
 
         # Check if data is a list
-        temp_errors = RaiseOnErrorManager()
-        try: super().check(container, path, temp_errors)
+        try: super().check(container, RaiseOnErrorManager())
         except TemplateCheckError as error:
             # If caught an error, register it!
             errors.register_error(error)
@@ -169,17 +167,16 @@ class TemplateList(Template):
 
             if len(container.data) not in self.length:
                 errors.register_error(TemplateCheckListLengthError(
-                    path=path,
+                    path=container.path,
                     expected=self.length,
                     got=len(container.data),
                 ))
 
             # For each element in the list,
             # check if it follows the element template
-            for index, cur in enumerate(container):
+            for cur in container:
                 self.template.check(
                     container=cur,
-                    path=path + (str(index),),
                     errors=errors,
                 )
 
@@ -228,13 +225,11 @@ class TemplateDict(Template):
 
     def check(self,
               container: BaseContainer,
-              path: typing.Tuple[str] = tuple(),
               errors: ErrorManager = ErrorCollection(),
               ) -> ErrorManager:
 
         # Check if the data is a dictionary
-        temp_errors = RaiseOnErrorManager()
-        try: super().check(container, path, temp_errors)
+        try: super().check(container, RaiseOnErrorManager())
         except TemplateCheckError as error:
             # If an error found, register it!
             errors.register_error(error)
@@ -243,7 +238,6 @@ class TemplateDict(Template):
             for key, template in self.template.items():
                 template.check(
                     container=container[key],
-                    path=path + (key,),
                     errors=errors,
                 )
 

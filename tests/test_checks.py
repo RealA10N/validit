@@ -213,9 +213,8 @@ def test_check_first_error(
         error: Exception):
 
     arguments = {
-        'path': (),
-        'errors': TemplateCheckRaiseOnError(),
         'container': HeadContainer(data),
+        'errors': TemplateCheckRaiseOnError(),
     }
 
     if error is None:
