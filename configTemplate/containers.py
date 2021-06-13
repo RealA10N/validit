@@ -1,6 +1,8 @@
 import typing
 from abc import ABC, abstractmethod
 
+from configTemplate.utils import DefaultValue
+
 
 class BaseContainer:
 
@@ -50,7 +52,14 @@ class Container(BaseContainer):
 
     @property
     def data(self,):
-        return self.__parent.data[self.__chiled]
+        """ Returns the data that is stored in the container. If there is no
+        data in the container, returns the `DefaultValue` object. """
+
+        try:
+            return self.__parent.data[self.__chiled]
+        except LookupError:
+            # If data doesn't exist
+            return DefaultValue
 
     @data.setter
     def data(self, value) -> None:
