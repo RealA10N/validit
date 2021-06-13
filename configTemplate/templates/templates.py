@@ -74,14 +74,27 @@ class Template(BaseTemplate):
 
 class Optional(BaseTemplate):
 
-    def __init__(self, template: Template):
+    def __init__(self,
+                 template: Template,
+                 default: typing.Any = DefaultValue
+                 ) -> None:
         self.__template = template
+        self.__default = default
 
         if not isinstance(template, Template):
             raise InvalidTemplateConfiguration(
                 "The 'Optional' constructor accepts a 'Template' instance, " +
                 f"not '{classname(template)}'"
             )
+
+    def container_dump(self,
+                       container: BaseContainer,
+                       data: typing.Any = DefaultValue,
+                       ) -> None:
+        if data is DefaultValue:
+            data = self.__default
+        if data is not DefaultValue:
+            container.data = data
 
     def check(self,
               data: typing.Any = DefaultValue,
