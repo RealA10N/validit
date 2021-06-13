@@ -29,7 +29,7 @@ class TemplateCheckErrorCollection(TemplateCheckErrorManager):
         """ Returns `True` only if there are no errors registered """
         return self.no_errors
 
-    def __repr__(self) -> str:
+    def __str__(self) -> str:
         """ Returns a colored string that shows the results of the check """
         if self.no_errors:
             return colored('Data check passed successfully', 'green',)
