@@ -1,12 +1,25 @@
 import typing
 from abc import ABC, abstractmethod
 
-from configTemplate.error_managers import TemplateCheckErrorManager
 from configTemplate.containers import BaseContainer
 from configTemplate.utils import DefaultValue
 
+from configTemplate.error_managers import (
+    TemplateCheckErrorManager as ErrorManager,
+    TemplateCheckErrorCollection as ErrorCollection,
+)
+
 
 class BaseTemplate(ABC):
+
+    @abstractmethod
+    def container_dump(self,
+                       container: BaseContainer,
+                       data: typing.Any = DefaultValue,
+                       ) -> None:
+        """ Recives an container and some data. Dumps only the relevent data
+        (according to the template) into the container. The previously saved
+        data in the container will be deleted. """
 
     @abstractmethod
     def check(self,
