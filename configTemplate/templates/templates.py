@@ -42,7 +42,7 @@ class Template(BaseTemplate):
             if not isinstance(type_, type):
                 # If not a basic type like `str`, `int`, etc.
                 raise InvalidTemplateConfiguration(
-                    "The 'Template' constructor accepts object types, " +
+                    f"The '{classname(self)}' constructor accepts object types, " +
                     f"not '{classname(type_)}'"
                 )
 
@@ -85,7 +85,7 @@ class Optional(BaseTemplate):
 
         if not isinstance(template, Template):
             raise InvalidTemplateConfiguration(
-                "The 'Optional' constructor accepts a 'Template' instance, " +
+                f"The '{classname(self)}' constructor accepts a 'Template' instance, " +
                 f"not '{classname(template)}'"
             )
 
@@ -120,7 +120,7 @@ class TemplateList(Template):
 
         if not isinstance(template, Template):
             raise InvalidTemplateConfiguration(
-                "The 'TemplateList' constructor recives a template instance, " +
+                f"The '{classname(self)}' constructor recives a template instance, " +
                 f'not {classname(template)}'
             )
 
