@@ -53,10 +53,10 @@ class Template(BaseTemplate):
         if data is not DefaultValue:
             container.data = data
 
-    def check(self,
-              container: BaseContainer,
-              errors: ErrorManager = ErrorCollection(),
-              ) -> ErrorManager:
+    def validate(self,
+                 container: BaseContainer,
+                 errors: ErrorManager,
+                 ) -> None:
 
         if container.data is DefaultValue:
             errors.register_error(
@@ -71,8 +71,6 @@ class Template(BaseTemplate):
                 expected=self.types,
                 got=container.data,
             ))
-
-        return errors
 
 
 class Optional(BaseTemplate):
@@ -99,16 +97,14 @@ class Optional(BaseTemplate):
         if data is not DefaultValue:
             container.data = data
 
-    def check(self,
-              container: BaseContainer,
-              errors: ErrorManager = ErrorCollection(),
-              ) -> ErrorManager:
+    def validate(self,
+                 container: BaseContainer,
+                 errors: ErrorManager,
+                 ) -> None:
         if container.data is not DefaultValue:
             # Only preforms the check if the data is provided.
             # if data is not given (data=Default), skips the check!
-            self.__template.check(container, errors)
-
-        return errors
+            self.__template.validate(container, errors)
 
 
 class TemplateList(Template):
@@ -152,13 +148,13 @@ class TemplateList(Template):
                 data=element
             )
 
-    def check(self,
-              container: BaseContainer,
-              errors: ErrorManager = ErrorCollection(),
-              ) -> ErrorManager:
+    def validate(self,
+                 container: BaseContainer,
+                 errors: ErrorManager,
+                 ) -> None:
 
         # Check if data is a list
-        try: super().check(container, RaiseOnErrorManager())
+        try: super().validate(container, RaiseOnErrorManager())
         except TemplateCheckError as error:
             # If caught an error, register it!
             errors.register_error(error)
@@ -175,12 +171,10 @@ class TemplateList(Template):
             # For each element in the list,
             # check if it follows the element template
             for cur in container:
-                self.template.check(
+                self.template.validate(
                     container=cur,
                     errors=errors,
                 )
-
-        return errors
 
 
 class TemplateDict(Template):
@@ -223,22 +217,20 @@ class TemplateDict(Template):
                 data=data.get(key, DefaultValue)
             )
 
-    def check(self,
-              container: BaseContainer,
-              errors: ErrorManager = ErrorCollection(),
-              ) -> ErrorManager:
+    def validate(self,
+                 container: BaseContainer,
+                 errors: ErrorManager,
+                 ) -> None:
 
         # Check if the data is a dictionary
-        try: super().check(container, RaiseOnErrorManager())
+        try: super().validate(container, RaiseOnErrorManager())
         except TemplateCheckError as error:
             # If an error found, register it!
             errors.register_error(error)
 
         else:
             for key, template in self.template.items():
-                template.check(
+                template.validate(
                     container=container[key],
                     errors=errors,
                 )
-
-        return errors

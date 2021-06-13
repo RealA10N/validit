@@ -218,8 +218,8 @@ def test_check_first_error(
     }
 
     if error is None:
-        template.check(**arguments)
+        template.validate(**arguments)
 
     else:
         with pytest.raises(error):
-            template.check(**arguments)
+            template.validate(**arguments)

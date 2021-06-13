@@ -22,10 +22,10 @@ class BaseTemplate(ABC):
         data in the container will be deleted. """
 
     @abstractmethod
-    def check(self,
-              container: BaseContainer,
-              errors: ErrorManager = ErrorCollection(),
-              ) -> ErrorManager:
+    def validate(self,
+                 container: BaseContainer,
+                 errors: ErrorManager,
+                 ) -> None:
         """ Preforms a validation check that validates if the given data
         follows the defined template. Returns an error manager object that
         contains a record of all mismatches. """
