@@ -54,21 +54,21 @@ class Template(BaseTemplate):
             container.data = data
 
     def check(self,
-              data: typing.Any = DefaultValue,
+              container: BaseContainer,
               path: typing.Tuple[str] = tuple(),
               errors: ErrorManager = ErrorCollection(),
               ) -> ErrorManager:
 
-        if data is DefaultValue:
+        if container.data is DefaultValue:
             errors.register_error(TemplateCheckMissingDataError(path))
 
-        elif not isinstance(data, self.types):
+        elif not isinstance(container.data, self.types):
             # If the given data is not an instance of the allowed types,
             # an error is registered.
             errors.register_error(TemplateCheckInvalidDataError(
                 path=path,
                 expected=self.types,
-                got=data,
+                got=container.data,
             ))
 
         return errors
@@ -99,14 +99,14 @@ class Optional(BaseTemplate):
             container.data = data
 
     def check(self,
-              data: typing.Any = DefaultValue,
+              container: BaseContainer,
               path: typing.Tuple[str] = tuple(),
               errors: ErrorManager = ErrorCollection(),
               ) -> ErrorManager:
-        if data is not DefaultValue:
+        if container.data is not DefaultValue:
             # Only preforms the check if the data is provided.
-            # if data is not given (data=None), skips the check!
-            self.__template.check(data, path, errors)
+            # if data is not given (data=Default), skips the check!
+            self.__template.check(container, path, errors)
 
         return errors
 
@@ -153,33 +153,35 @@ class TemplateList(Template):
             )
 
     def check(self,
-              data: typing.Any = DefaultValue,
+              container: BaseContainer,
               path: typing.Tuple[str] = tuple(),
               errors: ErrorManager = ErrorCollection(),
               ) -> ErrorManager:
 
         # Check if data is a list
         temp_errors = RaiseOnErrorManager()
-        try: super().check(data, path, temp_errors)
+        try: super().check(container, path, temp_errors)
         except TemplateCheckError as error:
             # If caught an error, register it!
             errors.register_error(error)
 
         else:
 
-            if len(data) not in self.length:
+            if len(container.data) not in self.length:
                 errors.register_error(TemplateCheckListLengthError(
                     path=path,
                     expected=self.length,
-                    got=len(data),
+                    got=len(container.data),
                 ))
 
             # For each element in the list,
             # check if it follows the element template
-            for index, element in enumerate(data):
-                # append current list index to path
-                cur_path = path + (str(index),)
-                self.template.check(element, cur_path, errors)
+            for index, cur in enumerate(container):
+                self.template.check(
+                    container=cur,
+                    path=path + (str(index),),
+                    errors=errors,
+                )
 
         return errors
 
@@ -225,22 +227,24 @@ class TemplateDict(Template):
             )
 
     def check(self,
-              data: typing.Any = DefaultValue,
+              container: BaseContainer,
               path: typing.Tuple[str] = tuple(),
               errors: ErrorManager = ErrorCollection(),
               ) -> ErrorManager:
 
         # Check if the data is a dictionary
         temp_errors = RaiseOnErrorManager()
-        try: super().check(data, path, temp_errors)
+        try: super().check(container, path, temp_errors)
         except TemplateCheckError as error:
             # If an error found, register it!
             errors.register_error(error)
 
         else:
             for key, template in self.template.items():
-                cur_path = path + (key,)
-                cur_data = data.get(key, DefaultValue)
-                template.check(cur_data, cur_path, errors)
+                template.check(
+                    container=container[key],
+                    path=path + (key,),
+                    errors=errors,
+                )
 
         return errors

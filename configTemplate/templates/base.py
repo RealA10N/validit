@@ -23,7 +23,7 @@ class BaseTemplate(ABC):
 
     @abstractmethod
     def check(self,
-              data: typing.Any = DefaultValue,
+              container: BaseContainer,
               path: typing.Tuple[str] = tuple(),
               errors: ErrorManager = ErrorCollection(),
               ) -> ErrorManager:

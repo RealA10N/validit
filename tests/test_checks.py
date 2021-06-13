@@ -9,6 +9,8 @@ from configTemplate.errors import (
     TemplateCheckListLengthError as ListLengthError,
 )
 
+from configTemplate.containers import HeadContainer
+
 
 class ExampleObj: pass
 class SonOfExample(ExampleObj): pass
@@ -210,10 +212,15 @@ def test_check_first_error(
         data: typing.Any,
         error: Exception):
 
-    errors = TemplateCheckRaiseOnError()
+    arguments = {
+        'path': (),
+        'errors': TemplateCheckRaiseOnError(),
+        'container': HeadContainer(data),
+    }
+
     if error is None:
-        template.check(data, errors=errors)
+        template.check(**arguments)
 
     else:
         with pytest.raises(error):
-            template.check(data, errors=errors)
+            template.check(**arguments)
