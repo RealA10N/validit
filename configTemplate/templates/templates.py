@@ -128,6 +128,28 @@ class TemplateList(Template):
                 f"'{valid_lengths}' is not a valid set of list lengths"
             ) from error
 
+    def container_dump(self,
+                       container: BaseContainer,
+                       data: typing.Any = DefaultValue,
+                       ) -> None:
+        container.data = list()
+
+        if not isinstance(data, (list, tuple)):
+            # If data is not a list (maybe default value)
+            # contanier will remain with an empty list.
+            return
+
+        for index, element in enumerate(data):
+
+            # Increase container length by one
+            container.data.append(None)
+
+            # Dump the rest of the data with the element template
+            self.template.container_dump(
+                container=container[index],
+                data=element
+            )
+
     def check(self,
               data: typing.Any = DefaultValue,
               path: typing.Tuple[str] = tuple(),
