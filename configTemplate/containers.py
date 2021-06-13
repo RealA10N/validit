@@ -21,9 +21,36 @@ class BaseContainer:
         the current container in the given index. """
         return Container(parent=self, chiled=index)
 
+    def __iter__(self,):
+        return ContainerIterator(self)
+
     def __str__(self,) -> str:
         """ Returns a string with the stored data string representation. """
         return f'Container<{self.data}>'
+
+
+class ContainerIterator:
+    """ An iterator that loops over a container and yields its
+    container-children. """
+
+    def __init__(self, container: BaseContainer):
+        self.__container = container
+
+        # By default, will use the iterator of the data to pass into __getitem__
+        # This is the default behavior of a dictionray, because the iterator of
+        # a dict return its keys (and they are passed to __getitem__ to retrive
+        # values). Handling the special case of lists and tuples (which the
+        # iterator yields the values and not the indices) will be done separately.
+
+        if isinstance(container.data, (list, tuple)):
+            self.__items = iter(range(len(container.data)))
+
+        else:
+            self.__items = iter(container.data)
+
+    def __next__(self,):
+        item = next(self.__items)
+        return self.__container[item]
 
 
 class HeadContainer(BaseContainer):
