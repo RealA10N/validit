@@ -18,8 +18,15 @@ from .base import (
     ErrorManager,
 )
 
+from configTemplate.containers import (
+    BaseContainer,
+    HeadContainer,
+    Container,
+)
+
 from configTemplate.exceptions import InvalidTemplateConfiguration
 from configTemplate.utils import AnyLength, DefaultValue
+from .base import BaseTemplate
 
 classname = lambda instance: type(instance).__name__
 
@@ -36,6 +43,13 @@ class Template(BaseTemplate):
                     "The 'Template' constructor accepts object types, " +
                     f"not '{classname(type_)}'"
                 )
+
+    def container_dump(self,
+                       container: BaseContainer,
+                       data: typing.Any = DefaultValue,
+                       ) -> None:
+        if data is not DefaultValue:
+            container.data = data
 
     def check(self,
               data: typing.Any = DefaultValue,
