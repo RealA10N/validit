@@ -1,10 +1,9 @@
 import typing
 from abc import ABC, abstractmethod
-
 from configTemplate.utils import DefaultValue
 
 
-class BaseContainer:
+class BaseContainer(ABC):
 
     @property
     @abstractmethod
