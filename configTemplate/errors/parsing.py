@@ -70,8 +70,5 @@ class TomlParsingError(FileParsingError):
         super().__init__(
             filetype='TOML',
             msg=exception.msg,
-            pos=(
-                exception.lineno,
-                exception.colno,
-            ),
+            pos=(exception.lineno, exception.colno),
         )

@@ -70,6 +70,9 @@ class Validate:
         """ The original user data, as given to the constructor. """
         return self._info.data
 
+    def __str__(self,) -> str:
+        return self.errors.__str__()
+
 
 class ValidateFromFile(Validate):
 
@@ -94,7 +97,7 @@ class ValidateFromFile(Validate):
 
         return '\n'.join(
             additional + line
-            for line in self.errors.__str__().splitlines()
+            for line in super().__str__().splitlines()
         )
 
 

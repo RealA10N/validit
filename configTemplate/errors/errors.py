@@ -19,23 +19,23 @@ class TemplateCheckError(Exception):
         """ A string that represents the path where the template check error
         occurred. """
 
-        return ''.join(f'[{element}]' for element in self.path)
+        return colored(
+            ''.join(f'[{element}]' for element in self.path),
+            'yellow'
+        ) if self.path else ''
 
     @property
     def description(self,) -> str:
         """ Generates and returns a string that represents the current template
         check error. """
-        msg = f'{self.path_str} ' if self.path else str()
-        msg += self.msg if self.msg else str()
-        return msg
+        return colored(self.msg, 'red') if self.msg else ''
 
-    @property
-    def colored(self,) -> str:
+    def __str__(self,) -> str:
         """ Generates and returns a colors string that represents the current
         template check error. """
-        msg = colored(f'{self.path_str} ', 'yellow') if self.path else str()
-        msg += colored(self.msg, 'red') if self.msg else str()
-        return msg
+
+        spacing = ' ' if self.description and self.path_str else ''
+        return f'{self.path_str}{spacing}{self.description}'
 
 
 class TemplateCheckMissingDataError(TemplateCheckError):
