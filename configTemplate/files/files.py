@@ -4,10 +4,10 @@ from abc import ABC
 from termcolor import colored
 
 from configTemplate import Template
-from configTemplate.error_managers import TemplateCheckErrorCollection as ErrorCollection
+from configTemplate.errors.managers import TemplateCheckErrorCollection as ErrorCollection
 from configTemplate.exceptions import MissingExtras
 
-from .extras import ExtraModules
+from configTemplate.utils import ExtraModules
 
 
 class TemplateFileLoader(ABC):

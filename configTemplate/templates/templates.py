@@ -2,7 +2,7 @@ import typing
 
 from collections import defaultdict
 
-from configTemplate.error_managers import (
+from configTemplate.errors.managers import (
     TemplateCheckErrorCollection as ErrorCollection,
     TemplateCheckRaiseOnError as RaiseOnErrorManager,
 )

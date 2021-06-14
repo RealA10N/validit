@@ -1,5 +1,6 @@
 import typing
 from termcolor import colored
+from configTemplate.utils import ExtraModules
 
 
 class TemplateCheckError(Exception):

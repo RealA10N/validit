@@ -4,7 +4,7 @@ from abc import ABC, abstractmethod
 from configTemplate.containers import BaseContainer
 from configTemplate.utils import DefaultValue
 
-from configTemplate.error_managers import (
+from configTemplate.errors.managers import (
     TemplateCheckErrorManager as ErrorManager,
     TemplateCheckErrorCollection as ErrorCollection,
 )

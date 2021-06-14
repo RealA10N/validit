@@ -1,8 +1,8 @@
+import pytest
 import typing
 
-import pytest
 from configTemplate import Template, TemplateList, TemplateDict, Optional
-from configTemplate.error_managers import TemplateCheckRaiseOnError
+from configTemplate.errors.managers import TemplateCheckRaiseOnError
 from configTemplate.errors import (
     TemplateCheckInvalidDataError as WrongTypeError,
     TemplateCheckMissingDataError as MissingDataError,
