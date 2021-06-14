@@ -8,6 +8,10 @@ def load_readme():
 
 REQUIRES = (
     'termcolor==1.1.0',
+
+    # the dataclasses module is prebuilt into python>=3.7
+    # For Python 3.6, it is supported using a backport
+    'dataclasses; python_version < "3.7"',
 )
 
 
