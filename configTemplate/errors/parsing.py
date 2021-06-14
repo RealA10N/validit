@@ -39,3 +39,21 @@ class JsonParsingError(FileParsingError):
             msg=exception.msg,
             pos=(exception.lineno, exception.colno),
         )
+
+
+class YamlParsingError(FileParsingError):
+    """ Raised or registered into a error manager when a YAML file is not
+    formatted correctly and is invalid. """
+
+    def __init__(self, exception):
+        """ Recives a `yaml.YAMLError` error and passes it to the file
+        parsing error constructor. """
+
+        super().__init__(
+            filetype='YAML',
+            msg=exception.problem,
+            pos=(
+                exception.problem_mark.line,
+                exception.problem_mark.column
+            ),
+        )

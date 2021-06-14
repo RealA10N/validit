@@ -10,6 +10,7 @@ from configTemplate.utils import ExtraModules
 
 from configTemplate.errors.parsing import (
     JsonParsingError,
+    YamlParsingError,
 )
 
 
@@ -119,6 +120,33 @@ class ValidateFromJSON(ValidateFromFile):
         except extras.json.JSONDecodeError as error:
             info.fatal_error = True
             info.errors.register_error(JsonParsingError(error))
+
+        finally:
+            super().__init__(template, info, title)
+
+
+class ValidateFromYAML(ValidateFromFile):
+
+    def __init__(self,
+                 template: BaseTemplate,
+                 fp: typing.IO,
+                 title: str = None,
+                 ) -> None:
+
+        extras = ExtraModules(
+            class_name=self.__class__.__name__,
+            extra_name='yaml',
+            module_names=('yaml',),
+        )
+
+        info = ValidateInformation()
+
+        try:
+            info.data = extras.yaml.full_load(fp)
+
+        except extras.yaml.YAMLError as error:
+            info.fatal_error = True
+            info.errors.register_error(YamlParsingError(error))
 
         finally:
             super().__init__(template, info, title)
