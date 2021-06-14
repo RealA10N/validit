@@ -1,7 +1,26 @@
-from .templates import Template, TemplateDict, TemplateList, Optional
-from .files import JsonFileLoader, YamlFileLoader, TomlFileLoader
+from .templates import (
+    Template,
+    TemplateDict,
+    TemplateList,
+    Optional,
+)
 
-__all__ = ['Template', 'TemplateDict', 'TemplateList', 'Optional',
-           'JsonFileLoader', 'YamlFileLoader', 'TomlFileLoader']
+from .validate import (
+    Validate,
+    ValidateFromJSON,
+    ValidateFromYAML,
+    ValidateFromTOML,
+)
+
+__all__ = [
+    'Template',
+    'TemplateDict',
+    'TemplateList',
+    'Optional',
+    'Validate',
+    'ValidateFromJSON',
+    'ValidateFromYAML',
+    'ValidateFromTOML',
+]
 
 __version__ = '0.3.2'
