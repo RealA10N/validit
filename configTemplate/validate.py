@@ -8,6 +8,10 @@ from configTemplate.templates.base import BaseTemplate
 from configTemplate.containers import HeadContainer
 from configTemplate.utils import ExtraModules
 
+from configTemplate.errors.parsing import (
+    JsonParsingError,
+)
+
 
 @dataclass
 class ValidateInformation:
@@ -63,3 +67,58 @@ class Validate:
     def original(self,) -> typing.Any:
         """ The original user data, as given to the constructor. """
         return self._info.data
+
+
+class ValidateFromFile(Validate):
+
+    def __init__(self,
+                 template: BaseTemplate,
+                 data: ValidateInformation,
+                 title: str = None,
+                 ) -> None:
+        """ Recives an open file (or file-like) object. Reads the data from it,
+        parses it with the corresponding format and returns the validation
+        results. """
+
+        self.__title = title
+        super().__init__(template, data)
+
+    def __str__(self) -> str:
+        """ Returns a string colored that represents the template error check
+        results and errors with the given data. """
+
+        additional = (colored(self.__title, 'cyan') + ' '
+                      ) if self.__title else ''
+
+        return '\n'.join(
+            additional + line
+            for line in self.errors.__str__().splitlines()
+        )
+
+
+class ValidateFromJSON(ValidateFromFile):
+
+    def __init__(self,
+                 template: BaseTemplate,
+                 fp: typing.IO,
+                 title: str = None,
+                 ) -> None:
+        """ Validate data from a JSON file, using a user-made template. """
+
+        extras = ExtraModules(
+            class_name=self.__class__.__name__,
+            extra_name='json',
+            module_names=('json',),
+        )
+
+        info = ValidateInformation()
+
+        try:
+            info.data = extras.json.load(fp)
+
+        except extras.json.JSONDecodeError as error:
+            info.fatal_error = True
+            info.errors.register_error(JsonParsingError(error))
+
+        finally:
+            super().__init__(template, info, title)
