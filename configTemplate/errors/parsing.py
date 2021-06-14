@@ -57,3 +57,21 @@ class YamlParsingError(FileParsingError):
                 exception.problem_mark.column
             ),
         )
+
+
+class TomlParsingError(FileParsingError):
+    """ Raised or registered into a error manager when a YAML file is not
+    formatted correctly and is invalid. """
+
+    def __init__(self, exception):
+        """ Recives a `toml.TomlDecodeError` error and passes it to the file
+        parsing error constructor. """
+
+        super().__init__(
+            filetype='TOML',
+            msg=exception.msg,
+            pos=(
+                exception.lineno,
+                exception.colno,
+            ),
+        )

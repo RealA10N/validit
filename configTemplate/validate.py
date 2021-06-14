@@ -11,6 +11,7 @@ from configTemplate.utils import ExtraModules
 from configTemplate.errors.parsing import (
     JsonParsingError,
     YamlParsingError,
+    TomlParsingError,
 )
 
 
@@ -147,6 +148,33 @@ class ValidateFromYAML(ValidateFromFile):
         except extras.yaml.YAMLError as error:
             info.fatal_error = True
             info.errors.register_error(YamlParsingError(error))
+
+        finally:
+            super().__init__(template, info, title)
+
+
+class ValidateFromTOML(ValidateFromFile):
+
+    def __init__(self,
+                 template: BaseTemplate,
+                 fp: typing.IO,
+                 title: str = None,
+                 ) -> None:
+
+        extras = ExtraModules(
+            class_name=self.__class__.__name__,
+            extra_name='toml',
+            module_names=('toml',),
+        )
+
+        info = ValidateInformation()
+
+        try:
+            info.data = extras.toml.load(fp)
+
+        except extras.toml.TomlDecodeError as error:
+            info.fatal_error = True
+            info.errors.register_error(TomlParsingError(error))
 
         finally:
             super().__init__(template, info, title)
