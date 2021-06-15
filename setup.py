@@ -38,14 +38,14 @@ EXTRAS['all'] = tuple(
 EXTRAS['dev'] += EXTRAS['all']
 
 setup(
-    name='configTemplate',
+    name='validit',
     description='Easily define and check configuration file structures 📂🍒',
     version='0.3.2',
     author='RealA10N',
     author_email='downtown2u@gmail.com',
     long_description=load_readme(),
     long_description_content_type='text/markdown',
-    url='https://github.com/RealA10N/configTemplate',
+    url='https://github.com/RealA10N/validit',
     classifiers=[
         'Development Status :: 4 - Beta',
         'Programming Language :: Python :: 3',

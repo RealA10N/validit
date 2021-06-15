@@ -1,15 +1,15 @@
 import pytest
 import typing
 
-from configTemplate import Template, TemplateList, TemplateDict, Optional
-from configTemplate.errors.managers import TemplateCheckRaiseOnError
-from configTemplate.errors import (
+from validit import Template, TemplateList, TemplateDict, Optional
+from validit.errors.managers import TemplateCheckRaiseOnError
+from validit.errors import (
     TemplateCheckInvalidDataError as WrongTypeError,
     TemplateCheckMissingDataError as MissingDataError,
     TemplateCheckListLengthError as ListLengthError,
 )
 
-from configTemplate.containers import HeadContainer
+from validit.containers import HeadContainer
 
 
 class ExampleObj: pass

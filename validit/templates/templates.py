@@ -2,12 +2,12 @@ import typing
 
 from collections import defaultdict
 
-from configTemplate.errors.managers import (
+from validit.errors.managers import (
     TemplateCheckErrorCollection as ErrorCollection,
     TemplateCheckRaiseOnError as RaiseOnErrorManager,
 )
 
-from configTemplate.errors import (
+from validit.errors import (
     TemplateCheckError,
     TemplateCheckInvalidDataError,
     TemplateCheckMissingDataError,
@@ -20,14 +20,14 @@ from .base import (
     ErrorManager,
 )
 
-from configTemplate.containers import (
+from validit.containers import (
     BaseContainer,
     HeadContainer,
     Container,
 )
 
-from configTemplate.exceptions import InvalidTemplateConfiguration
-from configTemplate.utils import AnyLength, DefaultValue
+from validit.exceptions import InvalidTemplateConfiguration
+from validit.utils import AnyLength, DefaultValue
 from .base import BaseTemplate
 
 classname = lambda instance: type(instance).__name__

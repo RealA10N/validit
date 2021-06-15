@@ -1,10 +1,10 @@
 import typing
 from abc import ABC, abstractmethod
 
-from configTemplate.containers import BaseContainer
-from configTemplate.utils import DefaultValue
+from validit.containers import BaseContainer
+from validit.utils import DefaultValue
 
-from configTemplate.errors.managers import (
+from validit.errors.managers import (
     TemplateCheckErrorManager as ErrorManager,
     TemplateCheckErrorCollection as ErrorCollection,
 )

@@ -1,5 +1,5 @@
 import typing
-from configTemplate.exceptions import MissingExtras
+from validit.exceptions import MissingExtras
 
 
 class DefaultValue:
@@ -43,7 +43,7 @@ class ExtraModules:
             except ImportError as error:
                 raise MissingExtras(
                     f"To use the '{class_name}' object you must install additional required packages. " +
-                    f"Use 'pip install configTemplate[{extra_name}]'"
+                    f"Use 'pip install validit[{extra_name}]'"
                 ) from error
 
     def __getattr__(self, name):

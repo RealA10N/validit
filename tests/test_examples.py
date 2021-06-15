@@ -1,7 +1,7 @@
 import os
 import pytest
 
-from configTemplate import (
+from validit import (
     Template, TemplateList, TemplateDict,
     Validate, ValidateFromJSON, ValidateFromYAML, ValidateFromTOML
 )

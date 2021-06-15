@@ -1,4 +1,4 @@
-name: 📦 Publish configTemplate to PyPI
+name: 📦 Publish validit to PyPI
 
 on:
   push:

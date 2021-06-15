@@ -1,40 +1,40 @@
-# configTemplate
+# validit
 
-[![Test](https://img.shields.io/github/workflow/status/reala10n/configtemplate/%E2%9C%94%20Test?label=test)](https://github.com/RealA10N/configTemplate/actions/workflows/test.yaml)
-[![PyPI](https://img.shields.io/pypi/v/configTemplate)](https://pypi.org/project/configTemplate/)
-[![PyPI - Python Version](https://img.shields.io/pypi/pyversions/configTemplate)](https://pypi.org/project/configTemplate/)
-[![GitHub Repo stars](https://img.shields.io/github/stars/reala10n/configTemplate?style=social)](https://github.com/RealA10N/configTemplate)
+[![Test](https://img.shields.io/github/workflow/status/reala10n/validit/%E2%9C%94%20Test?label=test)](https://github.com/RealA10N/validit/actions/workflows/test.yaml)
+[![PyPI](https://img.shields.io/pypi/v/validit)](https://pypi.org/project/validit/)
+[![PyPI - Python Version](https://img.shields.io/pypi/pyversions/validit)](https://pypi.org/project/validit/)
+[![GitHub Repo stars](https://img.shields.io/github/stars/reala10n/validit?style=social)](https://github.com/RealA10N/validit)
 
 _Easily define configuration file structures, and check if a given
 configuration file matches the template._
 
 ## Installation
 
-**configTemplate** is tested on CPython 3.6, 3.7, 3.8, and 3.9.
+**validit** is tested on CPython 3.6, 3.7, 3.8, and 3.9.
 Simply install using pip:
 
 ```bash
-pip install configTemplate
+pip install validit
 ```
 
 ### Support for additional file formats
 
-By default, _configTemplate_ only supports `JSON` configuration files, or
+By default, _validit_ only supports `JSON` configuration files, or
 already loaded data (not directly from a configuration file). However, using
-additional dependencies, _configTemplate_ supports the following file formats:
+additional dependencies, _validit_ supports the following file formats:
 
 - JSON
 - YAML
 - TOML
 
-To install _configTemplate_ with the additional required dependencies to support
+To install _validit_ with the additional required dependencies to support
 your preferred file format, use:
 
 ```yaml
-pip install configTemplate[yaml]        # install dependencies for yaml files
-pip install configTemplate[toml]        # toml files
-pip install configTemplate[json,toml]   # json and toml files
-pip install configTemplate[all]         # all available file formats
+pip install validit[yaml]        # install dependencies for yaml files
+pip install validit[toml]        # toml files
+pip install validit[json,toml]   # json and toml files
+pip install validit[all]         # all available file formats
 ```
 
 ## Usage
@@ -43,7 +43,7 @@ To create a template, you will need the basic `Template` module, and usually the
 other three basic modules `TemplateList`, `TemplateDict`, and `Optional`.
 
 ```python
-from configTemplate import Template, TemplateList, TemplateDict, Optional
+from validit import Template, TemplateList, TemplateDict, Optional
 ```
 
 Now, let's create a basic template that represents a single user:
@@ -71,12 +71,12 @@ else:
     print('data follows the template!')
 ```
 
-## Using configTemplate as a dependency
+## Using validit as a dependency
 
-**configTemplate** is still under active development, and some core features
+_validit_ is still under active development, and some core features
 may change substantially in the near future.
 
-If you are planning to use **configTemplate** as a dependency for your project,
+If you are planning to use _validit_ as a dependency for your project,
 we highly recommend specifying the exact version of the module you are using
 in the `requirements.txt` file or `setup.py` scripts.
 
@@ -84,6 +84,6 @@ For example, to pinpoint version _v0.3.2_ use the following line in your
 `requirements.txt` file:
 
 ```yaml
-configTemplate==0.3.2
-configTemplate[yaml]==0.3.2     # If using extra file formats
+validit==0.3.2
+validit[yaml]==0.3.2     # If using extra file formats
 ```

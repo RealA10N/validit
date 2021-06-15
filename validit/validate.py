@@ -3,12 +3,12 @@ import typing
 from dataclasses import dataclass
 from termcolor import colored
 
-from configTemplate.errors.managers import TemplateCheckErrorCollection as ErrorCollection
-from configTemplate.templates.base import BaseTemplate
-from configTemplate.containers import HeadContainer
-from configTemplate.utils import ExtraModules
+from validit.errors.managers import TemplateCheckErrorCollection as ErrorCollection
+from validit.templates.base import BaseTemplate
+from validit.containers import HeadContainer
+from validit.utils import ExtraModules
 
-from configTemplate.errors.parsing import (
+from validit.errors.parsing import (
     JsonParsingError,
     YamlParsingError,
     TomlParsingError,

@@ -1,6 +1,6 @@
 import typing
 from abc import ABC, abstractmethod
-from configTemplate.utils import DefaultValue
+from validit.utils import DefaultValue
 
 
 class BaseContainer(ABC):

@@ -1,9 +1,9 @@
 import pytest
 
-from configTemplate.utils import DefaultValue
-from configTemplate.containers import HeadContainer
+from validit.utils import DefaultValue
+from validit.containers import HeadContainer
 
-from configTemplate import (
+from validit import (
     Template,
     TemplateDict,
     TemplateList,

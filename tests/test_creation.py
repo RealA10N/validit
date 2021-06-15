@@ -1,8 +1,8 @@
 """ Test the creation of a template structure. """
 
 import pytest
-from configTemplate import Template, TemplateDict, TemplateList, Optional
-from configTemplate.exceptions import InvalidTemplateConfiguration
+from validit import Template, TemplateDict, TemplateList, Optional
+from validit.exceptions import InvalidTemplateConfiguration
 
 
 class ExampleObj: pass
