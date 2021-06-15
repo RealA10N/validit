@@ -130,17 +130,18 @@ class TemplateList(Template):
                        container: BaseContainer,
                        data: typing.Any = DefaultValue,
                        ) -> None:
-        container.data = list()
 
         if not isinstance(data, (list, tuple)):
             # If data is not a list (maybe default value)
-            # contanier will remain with an empty list.
+            # contanier will remain with default value.
+            container.data = data
             return
 
+        container.data = list()
         for index, element in enumerate(data):
 
             # Increase container length by one
-            container.data.append(None)
+            container.data.append(DefaultValue)
 
             # Dump the rest of the data with the element template
             self.template.container_dump(
@@ -202,15 +203,14 @@ class TemplateDict(Template):
                        container: BaseContainer,
                        data: typing.Any = DefaultValue,
                        ) -> None:
-        container.data = dict()
 
         if not isinstance(data, dict):
             # If data is not a dict (maybe default value)
-            # converts the data into a dict where values for every
-            # key is 'DefaultValue'. This is useful and used for
-            # dumping optional default data to the container, for example.
-            data = defaultdict(lambda _: DefaultValue)
+            # contanier will remain with default value.
+            container.data = data
+            return
 
+        container.data = dict()
         for key, template in self.template.items():
             template.container_dump(
                 container=container[key],

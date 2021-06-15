@@ -6,6 +6,7 @@ from configTemplate.containers import HeadContainer
 from configTemplate import (
     Template,
     TemplateDict,
+    TemplateList,
     Optional,
 )
 
@@ -24,9 +25,9 @@ cases = [
         'template': TemplateDict(user=Template(str), code=Template(int)),
         'cases': (
             {'in': None,
-                'out': {}},
+                'out': None},
             {'in': 123,
-                'out': {}},
+                'out': 123},
             {'in': {},
                 'out': {}},
             {'in': {'user': 123},
@@ -77,10 +78,38 @@ cases = [
             {'in': {'age': 17}, 'out': {'name': 'Unknown'}},
             {'in': {'name': 'Alon'}, 'out': {'name': 'Alon'}},
             {'in': {'name': 'Alon', 'age': 17}, 'out': {'name': 'Alon'}},
-            {'in': None, 'out': {'name': 'Unknown'}},
-            {'in': DefaultValue, 'out': {'name': 'Unknown'}},
+            {'in': None, 'out': None},
+            {'in': DefaultValue, 'out': DefaultValue},
         ),
-    }
+    },
+    {
+        'name': 'list',
+        'template': TemplateList(Template(int, float)),
+        'cases': (
+            {'in': [], 'out': []},
+            {'in': (), 'out': []},
+            {'in': [1, 2.3, 4], 'out': [1, 2.3, 4]},
+            {'in': (1.23,), 'out': [1.23]},
+            {'in': [1, 'hello'], 'out': [1, 'hello']},
+            # Even if value from wrong type, will dump the given data.
+            {'in': None, 'out': None},
+            {'in': 'NotAList', 'out': 'NotAList'}
+        ),
+    },
+    {
+        'name': 'list-of-dicts',
+        'template': TemplateList(TemplateDict(user=Template(str), code=Template(int))),
+        'cases': (
+            {'in': None, 'out': None},
+            {'in': [], 'out': []},
+            {'in': [{'user': 'Alon', 'code': 123, 'another': True}],
+                'out': [{'user': 'Alon', 'code': 123}]},
+            {'in': [{'yes': True}, {'no': False}],
+                'out': [{}, {}]},
+            {'in': ['hello', {'hi': 'hello'}],
+                'out': ['hello', {}]},
+        )
+    },
 ]
 
 
