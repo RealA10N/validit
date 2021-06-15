@@ -26,8 +26,8 @@ class TemplateCheckErrorCollection(TemplateCheckErrorManager):
         return self.count
 
     def __bool__(self,) -> bool:
-        """ Returns `True` only if there are no errors registered """
-        return self.count == 0
+        """ Returns `True` only if there are errors registered """
+        return self.count != 0
 
     def __str__(self) -> str:
         """ Returns a colored string that shows the results of the check """
