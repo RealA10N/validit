@@ -1,9 +1,15 @@
+import typing
 import os
+import sys
+
 import pytest
+from collections import namedtuple
 
 from validit import (
-    Template, TemplateList, TemplateDict,
-    Validate, ValidateFromJSON, ValidateFromYAML, ValidateFromTOML
+    Validate,
+    ValidateFromJSON,
+    ValidateFromYAML,
+    ValidateFromTOML,
 )
 
 THIS = __file__
@@ -16,27 +22,7 @@ VALIDATOR_EXTENSIONS = {
     '.toml': ValidateFromTOML,
 }
 
-cases = {
-    'example1': TemplateDict(
-        title=Template(str),
-        owner=TemplateDict(
-            name=Template(str),
-            dob=Template(str),
-        ),
-        database=TemplateDict(
-            server=Template(str),
-            ports=TemplateList(Template(int)),
-            connection_max=Template(int),
-            enabled=Template(bool),
-        ),
-        clients=TemplateDict(
-            data=TemplateList(
-                TemplateList(Template(str, int)),
-            ),
-            hosts=TemplateList(Template(str)),
-        ),
-    )
-}
+ExampleInfo = namedtuple('ExampleInfo', ['files', 'template'])
 
 
 def to_validator(name: str):
@@ -47,28 +33,46 @@ def to_validator(name: str):
     return None
 
 
-def get_example_files():
-    params = dict()
+def get_example_files() -> typing.List[ExampleInfo]:
+    params = list()
 
-    for name in cases:
+    for name in os.listdir(EXAMPLES_FOLDER):
         folder = os.path.join(EXAMPLES_FOLDER, name)
 
-        params[name] = {
+        # Loading example files and corresponding validators
+        files = {
             os.path.join(folder, file): to_validator(file)
             for file in os.listdir(folder)
             if to_validator(file) is not None
         }
+
+        # Loading the template
+        sys.path.append(folder)
+        pyfile = next(
+            name
+            for name in os.listdir(folder)
+            if name.endswith('.py')
+        )
+        filename = os.path.splitext(pyfile)[0]
+        template = __import__(filename, fromlist=['__template__'])
+
+        # Add the current example into the params list
+        params.append(
+            ExampleInfo(
+                files=files,
+                template=template.__template__
+            )
+        )
 
     return params
 
 
 @pytest.mark.parametrize('template, examples', [
     pytest.param(
-        cases[name],
-        value,
-        id=name,
+        info.template,
+        info.files,
     )
-    for name, value in get_example_files().items()
+    for info in get_example_files()
 ])
 def test_matching_example_data(template, examples):
 
@@ -79,22 +83,20 @@ def test_matching_example_data(template, examples):
                 validator(template, file).data
             )
 
-    for cur_data in data:
-        if cur_data != data[0]:
-            pytest.fail(
-                'Data from different example files are not equal.'
-            )
+    if any(data[0] != ddata for ddata in data):
+        pytest.fail(
+            'Data from different example files are not equal.'
+        )
 
 
 @ pytest.mark.parametrize('template, filepath, validator', [
     pytest.param(
-        cases[name],
+        info.template,
         filepath,
         validator,
-        id=f'{name}-{validator.__name__}',
     )
-    for name, info in get_example_files().items()
-    for filepath, validator in info.items()
+    for info in get_example_files()
+    for filepath, validator in info.files.items()
 ])
 def test_no_validation_errors(template, filepath, validator):
 
