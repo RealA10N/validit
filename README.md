@@ -5,8 +5,7 @@
 [![PyPI - Python Version](https://img.shields.io/pypi/pyversions/validit)](https://pypi.org/project/validit/)
 [![GitHub Repo stars](https://img.shields.io/github/stars/reala10n/validit?style=social)](https://github.com/RealA10N/validit)
 
-_Easily define configuration file structures, and check if a given
-configuration file matches the template._
+_Easily define configuration file structures, and validate files using the templates. 🍒📂_
 
 ## Installation
 

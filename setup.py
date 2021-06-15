@@ -39,7 +39,7 @@ EXTRAS['dev'] += EXTRAS['all']
 
 setup(
     name='validit',
-    description='Easily define and check configuration file structures 📂🍒',
+    description='Easily define and validate configuration file structures 📂🍒',
     version='0.3.2',
     author='RealA10N',
     author_email='downtown2u@gmail.com',
