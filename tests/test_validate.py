@@ -38,7 +38,7 @@ checks = [
                 [],
                 tuple(),
                 ['hello', 'there!'],
-                ('a list', 'of strings!') * 100_100,
+                ('a list', 'of strings!') * 100,
             ),
             WrongTypeError: (
                 None,
