@@ -126,10 +126,10 @@ If you are planning to use _validit_ as a dependency for your project,
 we highly recommend specifying the exact version of the module you are using
 in the `requirements.txt` file or `setup.py` scripts.
 
-For example, to pinpoint version _v0.3.2_ use the following line in your
+For example, to pinpoint version _v1.0.0_ use the following line in your
 `requirements.txt` file:
 
 ```yaml
-validit==0.3.2
-validit[yaml]==0.3.2     # If using extra file formats
+validit==1.0.0
+validit[yaml]==1.0.0     # If using extra file formats
 ```
