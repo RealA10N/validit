@@ -89,11 +89,12 @@ def test_matching_example_data(template, examples):
         )
 
 
-@ pytest.mark.parametrize('template, filepath, validator', [
+@pytest.mark.parametrize('template, filepath, validator', [
     pytest.param(
         info.template,
         filepath,
         validator,
+        id=os.path.basename(filepath)
     )
     for info in get_example_files()
     for filepath, validator in info.files.items()
