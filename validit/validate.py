@@ -1,6 +1,6 @@
 import typing
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from termcolor import colored
 
 from validit.errors.managers import TemplateCheckErrorCollection as ErrorCollection
@@ -24,7 +24,7 @@ class ValidateInformation:
     """
 
     data: typing.Any = None
-    errors: ErrorCollection = ErrorCollection()
+    errors: ErrorCollection = field(default_factory=ErrorCollection)
     fatal_error: bool = False
 
 
