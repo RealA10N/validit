@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 
 def load_readme():
-    with open('README.md') as readme:
+    with open('README.md', encoding='utf8') as readme:
         return readme.read()
 
 
