@@ -7,15 +7,15 @@
 
 _Easily define configuration file structures, and validate files using the templates. 🍒📂_
 
-- [Installation](#installation)
-  - [Support for additional file formats](#support-for-additional-file-formats)
-- [Usage](#usage)
-  - [Defining a template](#defining-a-template)
-  - [Validating your data](#validating-your-data)
-  - [Validating data from files](#validating-data-from-files)
-- [Using validit as a dependency](#using-validit-as-a-dependency)
+- [Installation ⏬](#installation-)
+  - [Support for additional file formats 😎](#support-for-additional-file-formats-)
+- [Usage 🪂](#usage-)
+  - [Defining a template ⚡](#defining-a-template-)
+  - [Validating data 🎯](#validating-data-)
+    - [Validating data from files 📂](#validating-data-from-files-)
+- [Using validit as a dependency 🤠](#using-validit-as-a-dependency-)
 
-## Installation
+## Installation ⏬
 
 **validit** is tested on CPython 3.6, 3.7, 3.8, and 3.9.
 Simply install using pip:
@@ -24,7 +24,7 @@ Simply install using pip:
 pip install validit
 ```
 
-### Support for additional file formats
+### Support for additional file formats 😎
 
 By default, _validit_ only supports `JSON` configuration files, or
 already loaded data (not directly from a configuration file). However, using
@@ -44,9 +44,9 @@ pip install validit[json,toml]   # json and toml files
 pip install validit[all]         # all available file formats
 ```
 
-## Usage
+## Usage 🪂
 
-### Defining a template
+### Defining a template ⚡
 
 To create a template, you will need the basic `Template` module, and usually the
 other three basic modules `TemplateList`, `TemplateDict`, and `Optional`.
@@ -63,7 +63,7 @@ TemplateUser = TemplateDict(            # a dictionary with 2 required values
 )
 ```
 
-### Validating your data
+### Validating data 🎯
 
 To validate your data with a template, you should use the `Validate` object.
 
@@ -90,7 +90,7 @@ else:                       # if data matches the template
     run_script(valid.data)  # run the script with the loaded data
 ```
 
-### Validating data from files
+#### Validating data from files 📂
 
 If your data is stored in a file, it is possible to use the `ValidateFromJSON`,
 `ValidateFromYAML` or `ValidateFromTOML` objects instead:
@@ -117,7 +117,7 @@ else:                       # if data matches the template
     run_script(valid.data)  # run the script with the loaded data
 ```
 
-## Using validit as a dependency
+## Using validit as a dependency 🤠
 
 _validit_ is still under active development, and some core features
 may change substantially in the near future.
