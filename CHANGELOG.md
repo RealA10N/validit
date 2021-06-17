@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- If a default value is provided to the `Optional` object, it will be checks to
+  see if it follows the template. If not, a `InvalidDefaultValue` exception will
+  be raised.
+  
+  For example, `Optional(Template(str), default=123)` will raise an
+  `InvalidDefaultValue` exception because the default value is an integer, but
+  the template accepts only strings.
+
 ## [1.0.1] - 17.06.2021
 
 ### Added
