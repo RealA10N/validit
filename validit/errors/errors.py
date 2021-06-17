@@ -1,4 +1,6 @@
 import typing
+import re
+
 from termcolor import colored
 from validit.utils import ExtraModules
 
@@ -36,6 +38,12 @@ class TemplateCheckError(Exception):
 
         spacing = ' ' if self.description and self.path_str else ''
         return f'{self.path_str}{spacing}{self.description}'
+
+    @property
+    def no_color_str(self,) -> str:
+        """ A string non colored string that represents the current template
+        error. """
+        return re.sub('\033\\[([0-9]+)(;[0-9]+)*m', '', str(self))
 
 
 class TemplateCheckMissingDataError(TemplateCheckError):
