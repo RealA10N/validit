@@ -10,3 +10,8 @@ class MissingExtras(ValidItError):
 
 class InvalidTemplateConfiguration(ValidItError):
     """ Raised when a template configuration is not valid. """
+
+
+class InvalidDefaultValue(ValidItError):
+    """ Raised when the given default value doesn't match the given template.
+    Used with the `Optional` object. """

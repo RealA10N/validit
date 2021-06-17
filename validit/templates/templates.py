@@ -26,7 +26,7 @@ from validit.containers import (
     Container,
 )
 
-from validit.exceptions import InvalidTemplateConfiguration
+from validit.exceptions import InvalidTemplateConfiguration, InvalidDefaultValue
 from validit.utils import AnyLength, DefaultValue
 from .base import BaseTemplate
 
@@ -87,6 +87,21 @@ class Optional(BaseTemplate):
                 f"The '{classname(self)}' constructor accepts a 'Template' instance, " +
                 f"not '{classname(template)}'"
             )
+
+        # If default value is provided, checks if the default value
+        # matches the template
+        if default is not DefaultValue:
+            try:
+                self.__template.validate(
+                    container=HeadContainer(default),
+                    errors=RaiseOnErrorManager(),
+                )
+
+            except TemplateCheckError as error:
+                raise InvalidDefaultValue(
+                    f"'{classname(self)}' received a default value that doesn't match the template: " +
+                    error.no_color_str
+                ) from None
 
     def container_dump(self,
                        container: BaseContainer,
