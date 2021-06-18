@@ -7,11 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.2] - 18.06.2021
+
 - If a default value is provided to the `Optional` object, it will be checks to
   see if it follows the template. If not, a `InvalidDefaultValue` exception will
-  be raised.
-  
-  For example, `Optional(Template(str), default=123)` will raise an
+  be raised. For example, `Optional(Template(str), default=123)` will raise an
   `InvalidDefaultValue` exception because the default value is an integer, but
   the template accepts only strings.
 
@@ -22,6 +22,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - This changelog file!
 - Option to import `BaseTemplate` using `from validit.templates import BaseTemplate`
 
-[Unreleased]: https://github.com/reala10n/validit/compare/v1.0.1...HEAD
+[Unreleased]: https://github.com/reala10n/validit/compare/v1.0.2...HEAD
+[1.0.1]: https://github.com/reala10n/validit/compare/v1.0.1...v1.0.2
 [1.0.1]: https://github.com/reala10n/validit/compare/v1.0.0...v1.0.1
 [1.0.0]: https://github.com/reala10n/validit/releases/tag/v1.0.0
