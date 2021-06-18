@@ -36,7 +36,15 @@ def to_validator(name: str):
 def get_example_files() -> typing.List[ExampleInfo]:
     params = list()
 
-    for name in os.listdir(EXAMPLES_FOLDER):
+    examples = [
+        name
+        for name in os.listdir(EXAMPLES_FOLDER)
+        if os.path.isdir(
+            os.path.join(EXAMPLES_FOLDER, name)
+        )
+    ]
+
+    for name in examples:
         folder = os.path.join(EXAMPLES_FOLDER, name)
 
         # Loading example files and corresponding validators
