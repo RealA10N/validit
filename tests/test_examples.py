@@ -14,7 +14,8 @@ from validit import (
 
 THIS = __file__
 HERE = os.path.dirname(THIS)
-EXAMPLES_FOLDER = os.path.join(HERE, 'examples')
+TOP = os.path.join(HERE, os.pardir)
+EXAMPLES_FOLDER = os.path.join(TOP, 'examples')
 
 VALIDATOR_EXTENSIONS = {
     '.json': ValidateFromJSON,
