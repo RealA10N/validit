@@ -2,7 +2,7 @@
 
 import pytest
 from validit import Template, TemplateDict, TemplateList, Optional
-from validit.exceptions import InvalidTemplateConfiguration
+from validit.exceptions import InvalidTemplateConfiguration, InvalidDefaultValue
 
 
 class ExampleObj: pass
@@ -59,17 +59,43 @@ class TestTemplateOptional:
         like dictionary template and list template. """
         Optional(template)
 
-    @ pytest.mark.parametrize('template', INVALID_TYPES)
+    @pytest.mark.parametrize('template', INVALID_TYPES)
     def test_creation_fails(self, template):
         """ Test that a template of instance (and not a type) raises an
         error. """
         with pytest.raises(InvalidTemplateConfiguration):
             Optional(template)
 
+    @pytest.mark.parametrize('kwargs', (
+        {'template': Template(str), 'default': 'string'},
+        {'template': Template(str), 'default': ''},
+        {'template': Template(int, float), 'default': 0},
+        {'template': Template(int, float), 'default': 123},
+        {'template': Template(int, float), 'default': 123.456},
+        {'template': TemplateDict(name=Template(str)),
+            'default': {'name': 'Alon'}},
+        {'template': Template(ExampleObj), 'default': ExampleObj()},
+    ))
+    def test_creation_default(self, kwargs):
+        Optional(**kwargs)
+
+    @pytest.mark.parametrize('kwargs', (
+        {'template': Template(str), 'default': None},
+        {'template': Template(str), 'default': 123},
+        {'template': Template(int), 'default': 1.23},
+        {'template': TemplateDict(name=Template(str)),
+            'default': {'name': 123}},
+        {'template': TemplateDict(name=Template(str)),
+            'default': {}},
+    ))
+    def test_creation_invalid_default_value(self, kwargs):
+        with pytest.raises(InvalidDefaultValue):
+            Optional(**kwargs)
+
 
 class TestTemplateDict:
 
-    @ pytest.mark.parametrize('template', (
+    @pytest.mark.parametrize('template', (
         {'username': Template(str)},
         {
             'name': Template(str),
@@ -80,7 +106,7 @@ class TestTemplateDict:
     def test_creation(self, template):
         TemplateDict(**template)
 
-    @ pytest.mark.parametrize('template', (
+    @pytest.mark.parametrize('template', (
         {'typeNotTemplate': str},
         {'instance': 'hello!'},
         {'string': Template(str),
@@ -94,7 +120,7 @@ class TestTemplateDict:
 
 class TestTemplateList:
 
-    @ pytest.mark.parametrize('template', (
+    @pytest.mark.parametrize('template', (
         Template(int),
         Template(str),
         Template(int, float, complex),
@@ -105,7 +131,7 @@ class TestTemplateList:
     def test_creation(self, template):
         TemplateList(template)
 
-    @ pytest.mark.parametrize('template', (
+    @pytest.mark.parametrize('template', (
         int, str, 'astring', ExampleObj, SonOfExample(), AnotherObj,
     ))
     def test_creation_fails(self, template):
