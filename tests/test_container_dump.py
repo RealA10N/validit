@@ -5,6 +5,7 @@ from validit.containers import HeadContainer
 
 from validit import (
     Template,
+    TemplateAny,
     TemplateDict,
     TemplateList,
     Optional,
@@ -19,6 +20,16 @@ cases = [
             {'in': str(), 'out': ''},
             {'in': DefaultValue, 'out': DefaultValue},
         ),
+    },
+    {
+        'name': 'any',
+        'template': TemplateAny(),
+        'cases': (
+            {'in': None, 'out': None},
+            {'in': DefaultValue, 'out': DefaultValue},
+            {'in': [{'user': 'Alon', 'code': 123, 'another': True}],
+                'out': [{'user': 'Alon', 'code': 123, 'another': True}]},
+        )
     },
     {
         'name': 'dict',

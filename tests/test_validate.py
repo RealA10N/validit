@@ -1,7 +1,7 @@
 import pytest
 import typing
 
-from validit import Template, TemplateList, TemplateDict, Optional
+from validit import Template, TemplateList, TemplateDict, TemplateAny, Optional
 from validit.errors.managers import TemplateCheckRaiseOnError
 from validit.errors import (
     TemplateCheckInvalidDataError as WrongTypeError,
@@ -9,6 +9,7 @@ from validit.errors import (
     TemplateCheckListLengthError as ListLengthError,
 )
 
+from validit.utils import DefaultValue
 from validit.containers import HeadContainer
 
 
@@ -29,6 +30,24 @@ checks = [
                 12.34, ExampleObj(), None,
             ),
         },
+    },
+    {
+        'name': 'any',
+        'template': TemplateAny(),
+        'checks': {
+            None: (
+                None,
+                list(),
+                dict(),
+                'test',
+                123,
+                ExampleObj,
+                ExampleObj(),
+            ),
+            MissingDataError: (
+                DefaultValue,
+            )
+        }
     },
     {
         'name': 'list',
@@ -188,7 +207,7 @@ checks = [
                 [{'username': 'A10N', 'realname': {'first': 'Alon', 'last': 123}}],
             )
         }
-    }
+    },
 ]
 
 
