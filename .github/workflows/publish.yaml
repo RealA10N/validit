@@ -1,4 +1,4 @@
-name: 📦 Publish validit to PyPI
+name: 📦 Publish
 
 on:
   push:
@@ -32,8 +32,19 @@ jobs:
       - name: Build distribution 💪
         run: python -m build
 
-      - name: Publish 🌎
+      - name: PyPI Publish 🌎
         uses: pypa/gh-action-pypi-publish@release/v1
         with:
           user: __token__
           password: ${{ secrets.PYPI_API_TOKEN }}
+
+      - name: GitHub Release 🚀
+        uses: marvinpinto/action-automatic-releases@latest
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          title:
+          files: |
+            README.md
+            dist/*
+          prerelease: no
+          draft: yes
