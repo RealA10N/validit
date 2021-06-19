@@ -7,7 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- The `TemplateAny` template, that accepts any data.
+
 ## [1.0.2] - 18.06.2021
+
+### Added
 
 - If a default value is provided to the `Optional` object, it will be checks to
   see if it follows the template. If not, a `InvalidDefaultValue` exception will
