@@ -1,5 +1,6 @@
 import typing
 
+from copy import deepcopy
 from collections import defaultdict
 
 from validit.errors.managers import (
@@ -71,6 +72,17 @@ class Template(BaseTemplate):
                 expected=self.types,
                 got=container.data,
             ))
+
+
+class TemplateAny(Template):
+
+    def __init__(self,):
+        super().__init__(object)
+
+    def container_dump(self,
+                       container: BaseContainer,
+                       data=DefaultValue) -> None:
+        container.data = deepcopy(data)
 
 
 class Optional(BaseTemplate):

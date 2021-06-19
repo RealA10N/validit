@@ -1,5 +1,6 @@
 from .templates import (
     Template,
+    TemplateAny,
     TemplateDict,
     TemplateList,
     Optional,
@@ -14,6 +15,7 @@ from .validate import (
 
 __all__ = [
     'Template',
+    'TemplateAny',
     'TemplateDict',
     'TemplateList',
     'Optional',
