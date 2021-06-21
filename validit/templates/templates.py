@@ -61,14 +61,14 @@ class Template(BaseTemplate):
 
         if container.data is DefaultValue:
             errors.register_error(
-                TemplateCheckMissingDataError(container.path)
+                TemplateCheckMissingDataError(container)
             )
 
         elif not isinstance(container.data, self.types):
             # If the given data is not an instance of the allowed types,
             # an error is registered.
             errors.register_error(TemplateCheckInvalidDataError(
-                path=container.path,
+                container=container,
                 expected=self.types,
                 got=container.data,
             ))
@@ -191,7 +191,7 @@ class TemplateList(Template):
 
             if len(container.data) not in self.length:
                 errors.register_error(TemplateCheckListLengthError(
-                    path=container.path,
+                    container=container,
                     expected=self.length,
                     got=len(container.data),
                 ))

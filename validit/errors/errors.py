@@ -4,17 +4,28 @@ import re
 from termcolor import colored
 from validit.utils import ExtraModules
 
+from validit.containers import BaseContainer
+
 
 class TemplateCheckError(Exception):
     """ A general object that represents a template check error.
     Although you can create instances of it, it is highly recommended to use
     subclasses of it to better describe the check error. """
 
-    def __init__(self, path: typing.List[str], msg: str = None):
-        self.path = path
+    def __init__(self,
+                 container: BaseContainer,
+                 msg: str = None
+                 ) -> None:
+        self.container = container
         self.msg = msg
 
         super().__init__(self.description)
+
+    @property
+    def path(self,) -> typing.Tuple[str]:
+        """ A collection of strings that represents the path from the main data
+        to the area in which the current error occurred. """
+        return self.container.path
 
     @property
     def path_str(self,) -> str:
@@ -50,20 +61,24 @@ class TemplateCheckMissingDataError(TemplateCheckError):
     """ An object that represents a template check error in which some required
     data is missing. """
 
-    def __init__(self, path):
-        super().__init__(path, msg='Missing required information')
+    def __init__(self, container: BaseContainer) -> None:
+        super().__init__(container, msg='Missing required information')
 
 
 class TemplateCheckInvalidDataError(TemplateCheckError):
     """ An object that represents a template check error in which the expected
     data was found, but it didn't follow the expected format / type. """
 
-    def __init__(self, path, expected: typing.Tuple[type], got: type):
+    def __init__(self,
+                 container: BaseContainer,
+                 expected: typing.Tuple[type],
+                 got: type
+                 ) -> None:
         self.expected = expected
         self.got = got
 
         super().__init__(
-            path,
+            container,
             msg=f"Expected {self.expected_str} but got '{self.got_str}'",
         )
 
@@ -95,8 +110,8 @@ class TemplateCheckListLengthError(TemplateCheckError):
     """ An object that represents a template check error in which a given list
     has an invalid length according to the template configuration. """
 
-    def __init__(self, path, expected: typing.Any, got: int):
+    def __init__(self, container: BaseContainer, expected: typing.Any, got: int):
         super().__init__(
-            path,
+            container,
             f'List length {got} is not in {expected}',
         )
