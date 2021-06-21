@@ -42,6 +42,13 @@ class TemplateCheckErrorCollection(TemplateCheckErrorManager):
         """ Add an error to the collection. """
         self.errors.append(error)
 
+    def dump_errors(self, destination: TemplateCheckErrorManager):
+        """ Dumps each error in the current error collection into the given
+        error manager. """
+
+        for error in self:
+            destination.register_error(error)
+
 
 class TemplateCheckRaiseOnError(TemplateCheckErrorManager):
 
