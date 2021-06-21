@@ -42,9 +42,9 @@ jobs:
         uses: marvinpinto/action-automatic-releases@latest
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
-          title:
-          files: |
+          files: >
             README.md
+            CHANGELOG.md
             dist/*
-          prerelease: no
-          draft: yes
+          prerelease: false
+          draft: true
