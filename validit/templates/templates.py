@@ -182,13 +182,13 @@ class TemplateList(Template):
                  ) -> None:
 
         # Check if data is a list
-        try: super().validate(container, RaiseOnErrorManager())
-        except TemplateCheckError as error:
-            # If caught an error, register it!
-            errors.register_error(error)
+        temp_errors = ErrorCollection()
+        super().validate(container, temp_errors)
+
+        if temp_errors:
+            temp_errors.dump_errors(errors)
 
         else:
-
             if len(container.data) not in self.length:
                 errors.register_error(TemplateCheckListLengthError(
                     container=container,
@@ -250,12 +250,14 @@ class TemplateDict(Template):
                  ) -> None:
 
         # Check if the data is a dictionary
-        try: super().validate(container, RaiseOnErrorManager())
-        except TemplateCheckError as error:
-            # If an error found, register it!
-            errors.register_error(error)
+        temp_errors = ErrorCollection()
+        super().validate(container, temp_errors)
+
+        if temp_errors:
+            temp_errors.dump_errors(errors)
 
         else:
+            # If no errors in super validation check, run actual validation
             for key, template in self.template.items():
                 template.validate(
                     container=container[key],
