@@ -1,9 +1,9 @@
 import typing
 
 from copy import deepcopy
-from collections import defaultdict
 
 from validit.errors.managers import (
+    TemplateCheckErrorManager as ErrorManager,
     TemplateCheckErrorCollection as ErrorCollection,
     TemplateCheckRaiseOnError as RaiseOnErrorManager,
 )
@@ -16,21 +16,15 @@ from validit.errors import (
     TemplateCheckListLengthError,
 )
 
-from .base import (
-    BaseTemplate,
-    DefaultValue,
-    ErrorManager,
-)
+from .base import BaseTemplate
 
 from validit.containers import (
     BaseContainer,
     HeadContainer,
-    Container,
 )
 
 from validit.exceptions import InvalidTemplateConfiguration, InvalidDefaultValue
 from validit.utils import AnyLength, DefaultValue
-from .base import BaseTemplate
 
 classname = lambda instance: type(instance).__name__
 
@@ -151,7 +145,7 @@ class TemplateList(Template):
         if (not hasattr(valid_lengths, '__contains__')
             ) or isinstance(valid_lengths, type):
             raise InvalidTemplateConfiguration(
-                f"'{valid_lengths}' is not a valid set of list lengths"
+                f"{valid_lengths!r} is not a valid set of list lengths"
             )
 
     def container_dump(self,

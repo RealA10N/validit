@@ -20,6 +20,10 @@ class AnyLength:
     def __contains__(*_):
         return True
 
+    @staticmethod
+    def __repr__() -> str:
+        return 'AnyLength'
+
 
 class ExtraModules:
     """ A helper object that imports and stores extra modules. If one or more

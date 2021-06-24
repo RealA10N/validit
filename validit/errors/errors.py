@@ -2,8 +2,6 @@ import typing
 import re
 
 from termcolor import colored
-from validit.utils import ExtraModules
-
 from validit.containers import BaseContainer
 
 
@@ -114,7 +112,7 @@ class TemplateCheckInvalidDataError(TemplateCheckError):
 
         super().__init__(
             container,
-            msg=f"Expected {expected_str} but got '{got_str}'",
+            msg=f"Expected {expected_str} but got {got_str}",
         )
 
 
@@ -125,5 +123,5 @@ class TemplateCheckListLengthError(TemplateCheckError):
     def __init__(self, container: BaseContainer, expected: typing.Any, got: int):
         super().__init__(
             container,
-            f'List length {got} is not in {expected}',
+            f'List length {got} is not {expected!r}',
         )
