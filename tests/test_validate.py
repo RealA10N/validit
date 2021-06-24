@@ -1,9 +1,18 @@
 import pytest
 import typing
 
-from validit import Template, TemplateList, TemplateDict, TemplateAny, Optional
+from validit import (
+    Template,
+    TemplateList,
+    TemplateDict,
+    TemplateAny,
+    Optional,
+    Options,
+)
+
 from validit.errors.managers import TemplateCheckRaiseOnError
 from validit.errors import (
+    TemplateCheckInvalidOptionError as InvalidOptionError,
     TemplateCheckInvalidDataError as WrongTypeError,
     TemplateCheckMissingDataError as MissingDataError,
     TemplateCheckListLengthError as ListLengthError,
@@ -208,6 +217,30 @@ checks = [
             )
         }
     },
+    {
+        'name': 'options-left-right',
+        'template': Options('L', 'R'),
+        'checks': {
+            None: (
+                'L', 'R',
+            ),
+            InvalidOptionError: (
+                'r', 'U', 1, None, DefaultValue, ExampleObj, ExampleObj(),
+            ),
+        },
+    },
+    {
+        'name': 'options-bool-none',
+        'template': Options(True, False, None),
+        'checks': {
+            None: (
+                True, False, None,
+            ),
+            InvalidOptionError: (
+                DefaultValue, 'YES', '', 0,
+            )
+        }
+    }
 ]
 
 

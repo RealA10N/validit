@@ -288,7 +288,7 @@ class Options(BaseTemplate):
                  errors: ErrorManager,
                  ) -> None:
         for cur in self.instances:
-            if cur == container.data:
+            if cur is container.data:
                 return
 
         errors.register_error(TemplateCheckInvalidOptionError(
