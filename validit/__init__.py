@@ -4,6 +4,7 @@ from .templates import (
     TemplateDict,
     TemplateList,
     Optional,
+    Options,
 )
 
 from .validate import (
@@ -19,6 +20,7 @@ __all__ = [
     'TemplateDict',
     'TemplateList',
     'Optional',
+    'Options',
     'Validate',
     'ValidateFromJSON',
     'ValidateFromYAML',

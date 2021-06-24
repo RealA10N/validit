@@ -10,6 +10,7 @@ from validit.errors.managers import (
 
 from validit.errors import (
     TemplateCheckError,
+    TemplateCheckInvalidOptionError,
     TemplateCheckInvalidDataError,
     TemplateCheckMissingDataError,
     TemplateCheckListLengthError,
@@ -148,7 +149,7 @@ class TemplateList(Template):
             )
 
         if (not hasattr(valid_lengths, '__contains__')
-                ) or isinstance(valid_lengths, type):
+            ) or isinstance(valid_lengths, type):
             raise InvalidTemplateConfiguration(
                 f"'{valid_lengths}' is not a valid set of list lengths"
             )
@@ -263,3 +264,35 @@ class TemplateDict(Template):
                     container=container[key],
                     errors=errors,
                 )
+
+
+class Options(BaseTemplate):
+    """ This template recives INSTANCES of objects (and not types), and when
+    validating, checks for EQUALITY between the data and the given instance.
+    This is useful in some cases where the options are pre-defined and limited.
+
+    For example: `Options('L', 'R')` to allow the data to only be strings that
+    represent directions. """
+
+    def __init__(self, *instances: typing.Any):
+        self.instances = instances
+
+    def container_dump(self,
+                       container: BaseContainer,
+                       data: typing.Any = DefaultValue,
+                       ) -> None:
+        container.data = data
+
+    def validate(self,
+                 container: BaseContainer,
+                 errors: ErrorManager,
+                 ) -> None:
+        for cur in self.instances:
+            if cur == container.data:
+                return
+
+        errors.register_error(TemplateCheckInvalidOptionError(
+            container=container,
+            expected=self.instances,
+            got=container.data,
+        ))

@@ -6,4 +6,5 @@ from .templates import (
     TemplateDict,
     TemplateList,
     Optional,
+    Options,
 )

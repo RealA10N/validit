@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Added the `Options` object template.
+
 ## [1.2.0] - 22.06.2021
 
 ### Added

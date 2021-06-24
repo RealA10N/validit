@@ -7,6 +7,21 @@ from validit.utils import ExtraModules
 from validit.containers import BaseContainer
 
 
+def readable_list(items: typing.List[str]) -> str:
+    """ Converts a list of strings into a comma seperated list. """
+
+    if not items:
+        return str()
+
+    body, end = items[:-1], items[-1]
+    s = ', '.join(repr(cur) for cur in body)
+
+    if s:
+        s += ' or '
+
+    return s + repr(end)
+
+
 class TemplateCheckError(Exception):
     """ A general object that represents a template check error.
     Although you can create instances of it, it is highly recommended to use
@@ -65,6 +80,22 @@ class TemplateCheckMissingDataError(TemplateCheckError):
         super().__init__(container, msg='Missing required information')
 
 
+class TemplateCheckInvalidOptionError(TemplateCheckError):
+
+    def __init__(self,
+                 container: BaseContainer,
+                 expected: tuple,
+                 got: typing.Any,
+                 ) -> None:
+        self.expected = expected
+        self.got = got
+
+        super().__init__(
+            container,
+            msg=f"Expected {readable_list(expected)} but got {repr(got)}"
+        )
+
+
 class TemplateCheckInvalidDataError(TemplateCheckError):
     """ An object that represents a template check error in which the expected
     data was found, but it didn't follow the expected format / type. """
@@ -77,33 +108,14 @@ class TemplateCheckInvalidDataError(TemplateCheckError):
         self.expected = expected
         self.got = got
 
+        expected_str = readable_list([cls.__name__ for cls in expected])
+        got_type = type(got) if not isinstance(got, type) else got
+        got_str = repr(got_type.__name__)
+
         super().__init__(
             container,
-            msg=f"Expected {self.expected_str} but got '{self.got_str}'",
+            msg=f"Expected {expected_str} but got '{got_str}'",
         )
-
-    @property
-    def expected_str(self,) -> str:
-        """ A string that represents the expected type """
-        formatname = lambda name: f"'{name.__name__}'"
-
-        excepted = list(self.expected)
-        start, last = excepted[:-1], excepted[-1]
-        string = ', '.join(formatname(type_) for type_ in start)
-
-        if string:
-            string += ' or '
-
-        string += formatname(last)
-        return string
-
-    @property
-    def got_str(self,) -> str:
-        """ A string that represents the given type """
-        got = self.got
-        if not isinstance(got, type):
-            got = type(got)
-        return got.__name__
 
 
 class TemplateCheckListLengthError(TemplateCheckError):
