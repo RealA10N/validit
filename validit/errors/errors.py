@@ -26,8 +26,8 @@ class TemplateCheckError(Exception):
     subclasses of it to better describe the check error. """
 
     def __init__(self,
-                 container: BaseContainer,
-                 msg: str = None
+                 container: BaseContainer = None,
+                 msg: str = None,
                  ) -> None:
         self.container = container
         self.msg = msg
@@ -38,7 +38,7 @@ class TemplateCheckError(Exception):
     def path(self,) -> typing.Tuple[str]:
         """ A collection of strings that represents the path from the main data
         to the area in which the current error occurred. """
-        return self.container.path
+        return self.container.path if self.container else ()
 
     @property
     def path_str(self,) -> str:

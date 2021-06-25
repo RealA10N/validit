@@ -23,7 +23,7 @@ class FileParsingError(TemplateCheckError):
         if pos:
             string += f' (line {pos[0]} column {pos[1]})'
 
-        super().__init__(path=[], msg=string)
+        super().__init__(msg=string)
 
 
 class JsonParsingError(FileParsingError):
