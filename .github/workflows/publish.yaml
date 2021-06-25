@@ -33,7 +33,7 @@ jobs:
     name: 🌎 PyPI
     runs-on: ubuntu-latest
     needs: test
-    continue-on-error: yes
+    continue-on-error: true
 
     steps:
       - name: Clone 👀
@@ -61,7 +61,7 @@ jobs:
     name: 🚀 GitHub Release
     runs-on: ubuntu-latest
     needs: test
-    continue-on-error: yes
+    continue-on-error: true
 
     steps:
       - name: Clone 👀
