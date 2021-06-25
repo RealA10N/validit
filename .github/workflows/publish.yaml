@@ -62,8 +62,8 @@ jobs:
     runs-on: ubuntu-latest
     needs: test
     continue-on-error: yes
-    
-      steps:
+
+    steps:
       - name: Clone 👀
         uses: actions/checkout@v2
 
@@ -78,6 +78,7 @@ jobs:
 
       - name: Build distribution 💪
         run: python -m build
+
       - name: GitHub Release 🚀
         uses: marvinpinto/action-automatic-releases@latest
         with:
