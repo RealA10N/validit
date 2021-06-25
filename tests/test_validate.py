@@ -26,9 +26,8 @@ from validit.utils import DefaultValue
 from validit.containers import HeadContainer
 
 
-class ExampleObj: pass
-class SonOfExample(ExampleObj): pass
-class AnotherObj: pass
+class ExampleObj: ...  # noqa: E701
+class AnotherObj: ...  # noqa: E701
 
 
 @dataclass(frozen=True)
