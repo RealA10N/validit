@@ -27,5 +27,5 @@ __all__ = [
     'ValidateFromTOML',
 ]
 
-__version__ = '1.3.0'
+__version__ = '1.3.1'
 __author__ = 'Alon Krymgand Osovsky'

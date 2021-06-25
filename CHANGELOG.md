@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.3.1] - 25.06.2021
+
+### Fixed
+
+- Fixed a bug that caused an unintentional error to raise when parsing of a
+  configuration file failed.
+
 ## [1.3.0] - 25.06.2021
 
 ### Added
@@ -47,7 +54,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - This changelog file!
 - Option to import `BaseTemplate` using `from validit.templates import BaseTemplate`
 
-[Unreleased]: https://github.com/reala10n/validit/compare/v1.3.0...HEAD
+[Unreleased]: https://github.com/reala10n/validit/compare/v1.3.1...HEAD
+[1.3.1]: https://github.com/reala10n/validit/compare/v1.3.0...v1.3.1
 [1.3.0]: https://github.com/reala10n/validit/compare/v1.2.0...v1.3.0
 [1.2.0]: https://github.com/reala10n/validit/compare/v1.1.0...v1.2.0
 [1.1.0]: https://github.com/reala10n/validit/compare/v1.0.2...v1.1.0
