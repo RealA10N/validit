@@ -26,7 +26,9 @@ from validit.containers import (
 from validit.exceptions import InvalidTemplateConfiguration, InvalidDefaultValue
 from validit.utils import AnyLength, DefaultValue
 
-classname = lambda instance: type(instance).__name__
+
+def classname(instance):
+    return type(instance).__name__
 
 
 class Template(BaseTemplate):
