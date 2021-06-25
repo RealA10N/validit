@@ -46,6 +46,25 @@ class CheckGroup:
 
 
 @dataclass(frozen=True)
+class SingleTest:
+    template: BaseTemplate
+    check: Check
+
+    def run(self,):
+        arguments = {
+            'container': HeadContainer(self.check.data),
+            'errors': TemplateCheckRaiseOnError(),
+        }
+
+        if self.check.error is None:
+            self.template.validate(**arguments)
+
+        else:
+            with pytest.raises(self.check.error):
+                self.template.validate(**arguments)
+
+
+@dataclass(frozen=True)
 class TemplateTest:
     name: str
     template: BaseTemplate
@@ -60,14 +79,10 @@ class TemplateTest:
                 final.append(check)
         return final
 
-    def to_params(self,):
+    def to_single_tests(self,):
         return [
-            pytest.param(
-                self.template,
-                check.data,
-                check.error,
-                id=self.name
-            ) for check in self.collect_checks()
+            SingleTest(template=self.template, check=check)
+            for check in self.collect_checks()
         ]
 
 
@@ -75,11 +90,11 @@ class TemplateTest:
 class CollectionTest:
     tests: typing.List[TemplateTest]
 
-    def to_params(self,):
+    def to_single_tests(self,):
         return [
-            param
+            single
             for test in self.tests
-            for param in test.to_params()
+            for single in test.to_single_tests()
         ]
 
 
@@ -301,20 +316,17 @@ tests = CollectionTest([
 ])
 
 
-@pytest.mark.parametrize('template, data, error', tests.to_params())
-def test_check_first_error(
-        template: Template,
-        data: typing.Any,
-        error: Exception):
+@pytest.mark.parametrize('test', tests.to_single_tests())
+def test_check_first_error(test: SingleTest):
 
     arguments = {
-        'container': HeadContainer(data),
+        'container': HeadContainer(test.check.data),
         'errors': TemplateCheckRaiseOnError(),
     }
 
-    if error is None:
-        template.validate(**arguments)
+    if test.check.error is None:
+        test.template.validate(**arguments)
 
     else:
-        with pytest.raises(error):
-            template.validate(**arguments)
+        with pytest.raises(test.check.error):
+            test.template.validate(**arguments)
