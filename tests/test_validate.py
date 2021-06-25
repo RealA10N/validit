@@ -1,5 +1,6 @@
 import pytest
 import typing
+from dataclasses import dataclass
 
 from validit import (
     Template,
@@ -10,8 +11,11 @@ from validit import (
     Options,
 )
 
+from validit.templates import BaseTemplate
+
 from validit.errors.managers import TemplateCheckRaiseOnError
 from validit.errors import (
+    TemplateCheckError,
     TemplateCheckInvalidOptionError as InvalidOptionError,
     TemplateCheckInvalidDataError as WrongTypeError,
     TemplateCheckMissingDataError as MissingDataError,
@@ -27,24 +31,78 @@ class SonOfExample(ExampleObj): pass
 class AnotherObj: pass
 
 
-checks = [
-    {
-        'name': 'simple',
-        'template': Template(str, int),
-        'checks': {
-            None: (
+@dataclass(frozen=True)
+class Check:
+    data: typing.Any
+    error: typing.Type[TemplateCheckError] = None
+
+
+@dataclass(frozen=True)
+class CheckGroup:
+    cases: typing.List[typing.Any]
+    error: typing.Type[TemplateCheckError] = None
+
+    def to_checks(self,):
+        return [Check(data, self.error) for data in self.cases]
+
+
+@dataclass(frozen=True)
+class TemplateTest:
+    name: str
+    template: BaseTemplate
+    checks: typing.List[typing.Union[Check, CheckGroup]]
+
+    def collect_checks(self,):
+        final = list()
+        for check in self.checks:
+            if isinstance(check, CheckGroup):
+                final.extend(check.to_checks())
+            else:
+                final.append(check)
+        return final
+
+    def to_params(self,):
+        return [
+            pytest.param(
+                self.template,
+                check.data,
+                check.error,
+                id=self.name
+            ) for check in self.collect_checks()
+        ]
+
+
+@dataclass(frozen=True)
+class CollectionTest:
+    tests: typing.List[TemplateTest]
+
+    def to_params(self,):
+        return [
+            param
+            for test in self.tests
+            for param in test.to_params()
+        ]
+
+
+tests = CollectionTest([
+    TemplateTest(
+        name='simple',
+        template=Template(str, int),
+        checks=[
+            CheckGroup([
                 'string', str(), int(), 123456, 0,
-            ),
-            WrongTypeError: (
+            ]),
+            CheckGroup([
                 12.34, ExampleObj(), None,
-            ),
-        },
-    },
-    {
-        'name': 'any',
-        'template': TemplateAny(),
-        'checks': {
-            None: (
+            ], error=WrongTypeError),
+            Check(DefaultValue, error=MissingDataError),
+        ]
+    ),
+    TemplateTest(
+        name='any',
+        template=TemplateAny(),
+        checks=[
+            CheckGroup([
                 None,
                 list(),
                 dict(),
@@ -52,141 +110,149 @@ checks = [
                 123,
                 ExampleObj,
                 ExampleObj(),
-            ),
-            MissingDataError: (
-                DefaultValue,
-            )
-        }
-    },
-    {
-        'name': 'list',
-        'template': TemplateList(Template(str)),
-        'checks': {
-            None: (
+            ]),
+            Check(DefaultValue, MissingDataError),
+        ]
+    ),
+    TemplateTest(
+        name='list',
+        template=TemplateList(Template(str)),
+        checks=[
+            CheckGroup([
                 [],
                 tuple(),
                 ['hello', 'there!'],
                 ('a list', 'of strings!') * 100,
-            ),
-            WrongTypeError: (
+            ]),
+            CheckGroup([
                 None,
                 123,
                 set('hello'),
                 ['hello', ExampleObj()],
                 [None],
-            ),
-        },
-    },
-    {
-        'name': 'dict',
-        'template': TemplateDict(
+            ], error=WrongTypeError)
+        ]
+    ),
+    TemplateTest(
+        name='dict',
+        template=TemplateDict(
             username=Template(str),
-            code=Template(int),
+            code=Template(int)
         ),
-        'checks': {
-            None: (
+        checks=[
+            CheckGroup([
                 {'username': 'RealA10N', 'code': 123},
                 {'username': '', 'code': 0, ExampleObj: AnotherObj()},
-            ),
-            WrongTypeError: (
+            ]),
+            CheckGroup([
                 {'username': 'RealA10N', 'code': '123'},
                 {'code': 123, 'username': str},
-            ),
-            MissingDataError: (
+            ], error=WrongTypeError),
+            CheckGroup([
                 dict(),
                 {'code': 123},
-            )
-        }
-    },
-    {
-        'name': 'list-of-dicts',
-        'template': TemplateList(TemplateDict(
+            ], error=MissingDataError),
+        ],
+    ),
+    TemplateTest(
+        name='list-of-dicts',
+        template=TemplateList(TemplateDict(
             username=Template(str),
             code=Template(int),
         )),
-        'checks': {
-            None: (
+        checks=[
+            CheckGroup([
                 list(),
                 [
                     {'username': 'RealA10N', 'code': 123},
                     {'username': 'elonmusk', 'code': 42069},
                 ],
-            ),
-            WrongTypeError: (
+            ]),
+            CheckGroup([
                 {'username': 'RealA10N', 'code': 123},
                 [ExampleObj()],
                 [
                     {'username': 'RealA10N', 'code': 123},
                     {'username': 'elonmusk', 'code': 12.34},
                 ],
-            ),
-            MissingDataError: (
+            ], error=WrongTypeError),
+            CheckGroup([
                 [{'username': 'RealA10N'}],
                 [
                     {'username': 'RealA10N', 'code': 123},
                     {'code': 456},
                 ],
-            )
-        }
-    },
-    {
-        'name': 'list-lengths-set',
-        'template': TemplateList(Template(int, float), valid_lengths={1, 2, 3}),
-        'checks': {
-            None: (
+            ], error=MissingDataError),
+        ],
+    ),
+    TemplateTest(
+        name='list-length-set',
+        template=TemplateList(Template(int, float), valid_lengths={1, 2, 3}),
+        checks=[
+            CheckGroup([
                 [21],
                 [1, 1.2],
                 [1.23, 123, 43],
-            ),
-            ListLengthError: (
+            ]),
+            CheckGroup([
                 [],
                 [1, 2, 3, 4],
-            ),
-        },
-    },
-    {
-        'name': 'list-lengths-range',
-        'template': TemplateList(Template(int), range(0, 100, 3)),
-        'checks': {
-            None: (
-                [], [1, 1, 1], [0] * 12, [0] * 51, [0] * 99,
-            ),
-            ListLengthError: (
-                [0], [0] * 100, [0] * 31,
-            )
-        },
-    },
-    {
-        'name': 'optional',
-        'template': TemplateDict(
+            ], error=ListLengthError),
+            CheckGroup([
+                [1, 'notnum'],
+                'notlist',
+            ], error=WrongTypeError),
+        ],
+    ),
+    TemplateTest(
+        name='list-lengths-range',
+        template=TemplateList(Template(int), range(0, 100, 3)),
+        checks=[
+            CheckGroup([
+                [],
+                [1, 1, 1],
+                [0] * 12,
+                [0] * 51,
+                [0] * 99,
+            ]),
+            CheckGroup([
+                [0],
+                [0] * 100,
+                [0] * 31,
+            ], error=ListLengthError),
+        ],
+    ),
+    TemplateTest(
+        name='optional',
+        template=TemplateDict(
             username=Template(str),
             nickname=Optional(Template(str)),
         ),
-        'checks': {
-            None: (
+        checks=[
+            CheckGroup([
                 {'username': 'RealA10N', 'nickname': 'Alon'},
                 {'username': 'RealA10N'},
-            ),
-            WrongTypeError: (
+            ]),
+            CheckGroup([
                 {'username': 'RealA10N', 'nickname': 123},
                 {'username': 123},
-            ),
-            MissingDataError: (
+            ], error=WrongTypeError),
+            CheckGroup([
                 {'nickname': 'Alon'},
-            )
-        }
-    },
-    {
-        'name': 'complex-optional',
-        'template': TemplateList(TemplateDict(
+            ], error=MissingDataError),
+        ],
+    ),
+    TemplateTest(
+        name='complex-optional',
+        template=TemplateList(TemplateDict(
             username=Template(str),
             realname=Optional(TemplateDict(
                 first=Template(str),
                 last=Template(str),
             )),
         )),
-        'checks': {
-            None: (
+        checks=[
+            CheckGroup([
                 list(),
                 [{'username': 'Alon'}],
                 [
@@ -194,8 +260,8 @@ checks = [
                     {'username': 'A10N', 'realname': {
                         'first': 'Alon', 'last': 'Krymgand'}},
                 ],
-            ),
-            MissingDataError: (
+            ]),
+            CheckGroup([
                 [{'username': 'A10N', 'realname': {'first': 'Alon'}}],
                 [{'username': 'A10N', 'realname': {'last': 'Krymgand'}}],
                 [
@@ -208,57 +274,35 @@ checks = [
                     {'username': 'A10N', 'realname': {
                         'first': 'Alon', 'last': 'Krymgand'}},
                 ],
-            ),
-            WrongTypeError: (
+            ], error=MissingDataError),
+            CheckGroup([
                 None, dict(),
                 {'username': 'A10N'},
                 [{'username': 123}],
                 [{'username': 'A10N', 'realname': {'first': 'Alon', 'last': 123}}],
-            )
-        }
-    },
-    {
-        'name': 'options-left-right',
-        'template': Options('L', 'R'),
-        'checks': {
-            None: (
-                'L', 'R',
-            ),
-            InvalidOptionError: (
-                'r', 'U', 1, None, DefaultValue, ExampleObj, ExampleObj(),
-            ),
-        },
-    },
-    {
-        'name': 'options-bool-none',
-        'template': Options(True, False, None),
-        'checks': {
-            None: (
-                True, False, None,
-            ),
-            InvalidOptionError: (
-                DefaultValue, 'YES', '', 0,
-            )
-        }
-    }
-]
+            ], error=WrongTypeError),
+        ]
+    ),
+    TemplateTest(
+        name='options-left-right',
+        template=Options('L', 'R'),
+        checks=[
+            CheckGroup(['L', 'R']),
+            CheckGroup([
+                'r',
+                'U',
+                1,
+                None,
+                DefaultValue,
+                ExampleObj,
+                ExampleObj(),
+            ], error=InvalidOptionError)
+        ]
+    )
+])
 
 
-def generate_params():
-    params = list()
-    for test in checks:
-        template = test['template']
-        name = test['name']
-        for error in test['checks']:
-            for data in test['checks'][error]:
-                params.append(
-                    pytest.param(template, data, error, id=name)
-                )
-
-    return params
-
-
-@pytest.mark.parametrize('template, data, error', generate_params())
+@pytest.mark.parametrize('template, data, error', tests.to_params())
 def test_check_first_error(
         template: Template,
         data: typing.Any,
