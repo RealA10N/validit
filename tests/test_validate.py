@@ -34,6 +34,7 @@ class AnotherObj: ...  # noqa: E701
 class Check:
     data: typing.Any
     error: typing.Type[TemplateCheckError] = None
+    msg: typing.Optional[str] = None
 
 
 @dataclass(frozen=True)
@@ -106,10 +107,16 @@ tests = CollectionTest([
             CheckGroup([
                 'string', str(), int(), 123456, 0,
             ]),
-            CheckGroup([
-                12.34, ExampleObj(), None,
-            ], error=WrongTypeError),
-            Check(DefaultValue, error=MissingDataError),
+            Check(
+                ExampleObj(),
+                error=WrongTypeError,
+                msg="Expected 'str' or 'int' but got 'ExampleObj'",
+            ),
+            Check(
+                DefaultValue,
+                error=MissingDataError,
+                msg='Missing required information',
+            ),
         ]
     ),
     TemplateTest(
@@ -138,9 +145,13 @@ tests = CollectionTest([
                 ['hello', 'there!'],
                 ('a list', 'of strings!') * 100,
             ]),
+            Check(
+                123,
+                error=WrongTypeError,
+                msg="Expected 'list' or 'tuple' but got 'int'",
+            ),
             CheckGroup([
                 None,
-                123,
                 set('hello'),
                 ['hello', ExampleObj()],
                 [None],
@@ -305,12 +316,16 @@ tests = CollectionTest([
             CheckGroup([
                 'r',
                 'U',
-                1,
                 None,
                 DefaultValue,
                 ExampleObj,
                 ExampleObj(),
-            ], error=InvalidOptionError)
+            ], error=InvalidOptionError),
+            Check(
+                21,
+                error=InvalidOptionError,
+                msg="Expected 'L' or 'R' but got 21"
+            ),
         ]
     )
 ])
@@ -328,5 +343,16 @@ def test_check_first_error(test: SingleTest):
         test.template.validate(**arguments)
 
     else:
-        with pytest.raises(test.check.error):
+        with pytest.raises(test.check.error) as einfo:
             test.template.validate(**arguments)
+
+        error: TemplateCheckError = einfo.value
+        if test.check.msg is not None and error.msg != test.check.msg:
+            pytest.fail(
+                '\n'.join([
+                    'Expected message:',
+                    test.check.msg,
+                    'But instead got message:',
+                    error.msg,
+                ])
+            )
