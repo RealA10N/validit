@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.3.2] - 26.06.2021
+
+### Fixed
+
+- Fixed a bug that prevented the creation of optional options templates
+  (`Optional(Options(...))`)
+
+
 ## [1.3.1] - 25.06.2021
 
 ### Fixed
@@ -54,7 +62,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - This changelog file!
 - Option to import `BaseTemplate` using `from validit.templates import BaseTemplate`
 
-[Unreleased]: https://github.com/reala10n/validit/compare/v1.3.1...HEAD
+[Unreleased]: https://github.com/reala10n/validit/compare/v1.3.2...HEAD
+[1.3.1]: https://github.com/reala10n/validit/compare/v1.3.1...v1.3.2
 [1.3.1]: https://github.com/reala10n/validit/compare/v1.3.0...v1.3.1
 [1.3.0]: https://github.com/reala10n/validit/compare/v1.2.0...v1.3.0
 [1.2.0]: https://github.com/reala10n/validit/compare/v1.1.0...v1.2.0
