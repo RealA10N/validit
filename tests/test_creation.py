@@ -1,7 +1,7 @@
 """ Test the creation of a template structure. """
 
 import pytest
-from validit import Template, TemplateDict, TemplateList, Optional
+from validit import Template, TemplateDict, TemplateList, Optional, Options
 from validit.exceptions import InvalidTemplateConfiguration, InvalidDefaultValue
 
 
@@ -53,6 +53,7 @@ class TestTemplateOptional:
         TemplateDict(user=Template(str), password=Template(int)),
         TemplateList(Template(str)),
         TemplateDict(user=Template(ExampleObj), password=Template(AnotherObj)),
+        Options('yes', 'no'),
     ))
     def test_complex_creation(self, template):
         """ Test that a optional template constractor accepts advance templates
@@ -75,6 +76,7 @@ class TestTemplateOptional:
         {'template': TemplateDict(name=Template(str)),
             'default': {'name': 'Alon'}},
         {'template': Template(ExampleObj), 'default': ExampleObj()},
+        {'template': Options('yes', 'no'), 'default': 'no'},
     ))
     def test_creation_default(self, kwargs):
         Optional(**kwargs)
@@ -153,3 +155,14 @@ class TestTemplateList:
     def test_length_fails(self, types, lengths):
         with pytest.raises(InvalidTemplateConfiguration):
             TemplateList(Template(*types), valid_lengths=lengths)
+
+
+class TestOptions:
+
+    @pytest.mark.parametrize('instances', (
+        (1, 2, 3),
+        ('yes', 'no'),
+        (True, False, None),
+    ))
+    def test_creation(self, instances):
+        Options(*instances)

@@ -327,7 +327,16 @@ tests = CollectionTest([
                 msg="Expected 'L' or 'R' but got 21"
             ),
         ]
-    )
+    ),
+    TemplateTest(
+        name='optional-options',
+        template=Optional(Options('jpeg', 'png', 'gif'), default='gif'),
+        checks=[
+            CheckGroup(['jpeg', 'png', 'gif']),
+            Check(DefaultValue),
+            CheckGroup(['hello', 123, None], error=InvalidOptionError)
+        ],
+    ),
 ])
 
 

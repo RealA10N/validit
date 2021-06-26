@@ -91,9 +91,9 @@ class Optional(BaseTemplate):
         self.__template = template
         self.__default = default
 
-        if not isinstance(template, Template):
+        if not isinstance(template, BaseTemplate):
             raise InvalidTemplateConfiguration(
-                f"The '{classname(self)}' constructor accepts a 'Template' instance, " +
+                f"The '{classname(self)}' constructor accepts Templates, " +
                 f"not '{classname(template)}'"
             )
 
