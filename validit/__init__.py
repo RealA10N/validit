@@ -1,31 +1,31 @@
-from .templates import (
-    Template,
-    TemplateAny,
-    TemplateDict,
-    TemplateList,
-    Optional,
-    Options,
-)
+from .schema import Schema
 
-from .validate import (
-    Validate,
-    ValidateFromJSON,
-    ValidateFromYAML,
-    ValidateFromTOML,
-)
+from .string import String
+from .boolean import Boolean
+from .number import Number, Integer
+
+from .dictionary import Dictionary
+from .union import Union, Optional
+
+from .validate import validate, ValidationResults
 
 __all__ = [
-    'Template',
-    'TemplateAny',
-    'TemplateDict',
-    'TemplateList',
+    # base
+    'Schema',
+    'validate',
+    'ValidationResults',
+
+    # primitive
+    'String',
+    'Boolean',
+    'Number',
+    'Integer',
+
+    # nested
+    'Dictionary',
     'Optional',
-    'Options',
-    'Validate',
-    'ValidateFromJSON',
-    'ValidateFromYAML',
-    'ValidateFromTOML',
+    'Union',
 ]
 
-__version__ = '1.3.2'
+__version__ = '2.0.0-dev'
 __author__ = 'Alon Krymgand Osovsky'
