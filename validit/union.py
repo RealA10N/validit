@@ -12,7 +12,9 @@ class Union(Schema):
 
     def validate(self, data) -> Iterator[ValidationUnionError]:
         for option in self.options:
-            if not option.validate(data):
+            try:
+                next(option.validate(data))
+            except StopIteration:
                 # If there are no errors, this option is valid.
                 return
 
