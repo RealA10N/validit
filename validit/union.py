@@ -1,6 +1,6 @@
 from validit import Schema
 from validit.errors import ValidationUnionError
-from validit.utils import shorten
+from validit.utils import shorten, MISSING
 
 from typing import Iterator
 
@@ -22,3 +22,12 @@ class Union(Schema):
     def __repr__(self) -> str:
         extra = ', '.join(repr(op) for op in self.options)
         return f"Union[{shorten(extra)}]"
+
+
+class Optional(Union):
+    def __init__(self, *options: Schema) -> None:
+        super().__init__(MISSING, *options)
+
+    def __repr__(self) -> str:
+        extra = ', '.join(repr(op) for op in self.options if op is not MISSING)
+        return f"Optional[{shorten(extra)}]"
