@@ -1,10 +1,7 @@
 import pytest
 
-
 from validit import Union, Boolean, String
 from validit.errors import ValidationUnionError
-
-import re
 
 
 class TestUnion:
@@ -22,7 +19,7 @@ class TestUnion:
         assert not errors
 
     @pytest.mark.parametrize('options, data', (
-        ((Boolean(), String(re.compile('.+'))), ''),
+        ((Boolean(), String(r'.+')), ''),
         ((Boolean(), String()), None),
         (tuple(), None)
     ))

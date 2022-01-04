@@ -1,5 +1,4 @@
 import pytest
-import re
 
 from validit import Dictionary, String, Optional
 from validit.boolean import Boolean
@@ -10,7 +9,7 @@ class TestDictionary:
 
     @pytest.mark.parametrize('options, data', (
         (
-            {'name': String(re.compile('[a-zA-Z]{3,15}'))},
+            {'name': String(r'[a-zA-Z]{3,15}')},
             {'name': 'Alon'}
         ),
         (
