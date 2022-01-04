@@ -13,6 +13,14 @@ EXTRAS = {
     ),
 }
 
+
+REQUIRES = (
+    # the dataclasses module is prebuilt into python>=3.7
+    # For Python 3.6, it is supported using a backport
+    'dataclasses; python_version < "3.7"',
+)
+
+
 setup(
     name='validit',
     description='Easily define and validate configuration file structures 📂🍒',
@@ -33,5 +41,6 @@ setup(
     ],
     packages=find_packages(),
     python_requires='>=3.6',
+    install_requires=REQUIRES,
     extras_require=EXTRAS,
 )

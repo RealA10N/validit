@@ -7,9 +7,13 @@ from .number import Number, Integer
 from .dictionary import Dictionary
 from .union import Union, Optional
 
+from .validate import validate, ValidationResults
+
 __all__ = [
     # base
     'Schema',
+    'validate',
+    'ValidationResults',
 
     # primitive
     'String',
