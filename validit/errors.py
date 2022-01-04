@@ -27,3 +27,11 @@ class ValidationKeyError(ValidationError):
     def __init__(self, key: str) -> None:
         pass
 
+
+class ValidationRangeError(ValidationError):
+    def __init__(self,
+                 got: float,
+                 minimun: float = None,
+                 maximum: float = None,
+                 ) -> None:
+        pass
