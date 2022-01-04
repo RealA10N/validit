@@ -6,10 +6,6 @@ def load_readme():
         return readme.read()
 
 
-REQUIRES = (
-)
-
-
 EXTRAS = {
     'dev': (
         'pytest>=6.2, <6.3',
@@ -37,6 +33,5 @@ setup(
     ],
     packages=find_packages(),
     python_requires='>=3.6',
-    install_requires=REQUIRES,
     extras_require=EXTRAS,
 )
