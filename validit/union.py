@@ -27,9 +27,13 @@ class Union(Schema):
 
 
 class Optional(Union):
-    def __init__(self, *options: Schema) -> None:
-        super().__init__(MISSING, *options)
+
+    def validate(self, data) -> Iterator[ValidationUnionError]:
+        if data is MISSING:
+            return
+        else:
+            yield from super().validate(data)
 
     def __repr__(self) -> str:
-        extra = ', '.join(repr(op) for op in self.options if op is not MISSING)
+        extra = ', '.join(repr(op) for op in self.options)
         return f"Optional[{shorten(extra)}]"

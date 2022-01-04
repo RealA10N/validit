@@ -6,6 +6,12 @@ def shorten(text: str):
     return textwrap.shorten(text, width=25, placeholder='...')
 
 
-class MISSING:
+class MissingType:
     """ A dummy class that is uses with different 'get' methods as a default value
     when the requested value is missing. Used instead of the builtin 'None'. """
+
+    def __repr__(self) -> str:
+        return 'MISSING'
+
+
+MISSING = MissingType()

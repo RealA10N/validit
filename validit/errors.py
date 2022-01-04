@@ -21,3 +21,9 @@ class ValidationRegexError(ValidationError):
 class ValidationUnionError(ValidationError):
     def __init__(self, expected: Tuple[Schema], got: Any) -> None:
         pass
+
+
+class ValidationKeyError(ValidationError):
+    def __init__(self, key: str) -> None:
+        pass
+
