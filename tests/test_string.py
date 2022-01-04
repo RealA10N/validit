@@ -1,8 +1,8 @@
-from abc import abstractclassmethod
 import pytest
+import re
 
 from validit import String
-from validit.errors import ValidationTypeError
+from validit.errors import ValidationTypeError, ValidationRegexError
 
 
 class TestString:
@@ -29,3 +29,24 @@ class TestString:
         errors = tuple(String().validate(data))
         assert len(errors) == 1
         assert isinstance(errors[0], ValidationTypeError)
+
+    @pytest.mark.parametrize('pattern, data', (
+        (r'.+', 'Hello There!'),
+        (r'\w+', 'OnlyEnglishWorksHere'),
+        (r'\w+', 'th1s_sh0uld_BE_FINE_t00'),
+        (r'\d+', '1234'),
+        (r'\w*', ''),
+    ))
+    def test_valid_regex(self, pattern: str, data: str):
+        errors = tuple(String(re.compile(pattern)).validate(data))
+        assert len(errors) == 0
+
+    @pytest.mark.parametrize('pattern, data', (
+        (r'.+', str()),
+        (r'\w*', 'This is not pure English!'),
+        (r'.{,10}', 'This string is too long.'),
+    ))
+    def test_invalid_regex(self, pattern: str, data: str):
+        errors = tuple(String(re.compile(pattern)).validate(data))
+        assert len(errors) == 1
+        assert isinstance(errors[0], ValidationRegexError)
