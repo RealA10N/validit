@@ -1,4 +1,6 @@
-from typing import Type, Any, Pattern
+from validit import Schema
+
+from typing import Type, Any, Pattern, Tuple
 
 
 class ValidationError:
@@ -13,4 +15,9 @@ class ValidationTypeError(ValidationError):
 
 class ValidationRegexError(ValidationError):
     def __init__(self, string: str, pattern: Pattern) -> None:
+        pass
+
+
+class ValidationUnionError(ValidationError):
+    def __init__(self, expected: Tuple[Schema], got: Any) -> None:
         pass
