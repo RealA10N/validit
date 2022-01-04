@@ -7,11 +7,6 @@ def load_readme():
 
 
 REQUIRES = (
-    'termcolor==1.1.0',
-
-    # the dataclasses module is prebuilt into python>=3.7
-    # For Python 3.6, it is supported using a backport
-    'dataclasses; python_version < "3.7"',
 )
 
 
@@ -20,27 +15,12 @@ EXTRAS = {
         'pytest>=6.2, <6.3',
         'flake8>=3.9, <3.10'
     ),
-    'yaml': (
-        'pyyaml>=5.4, <5.5',
-    ),
-    'toml': (
-        'toml>=0.10.2, <0.11',
-    ),
 }
-
-EXTRAS['all'] = tuple(
-    package
-    for group in EXTRAS
-    if group != 'dev'
-    for package in EXTRAS[group]
-)
-
-EXTRAS['dev'] += EXTRAS['all']
 
 setup(
     name='validit',
     description='Easily define and validate configuration file structures 📂🍒',
-    version='1.3.2',
+    version='2.0.0-dev',
     author='RealA10N',
     author_email='downtown2u@gmail.com',
     long_description=load_readme(),

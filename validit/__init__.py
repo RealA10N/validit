@@ -1,31 +1,4 @@
-from .templates import (
-    Template,
-    TemplateAny,
-    TemplateDict,
-    TemplateList,
-    Optional,
-    Options,
-)
+__all__ = []
 
-from .validate import (
-    Validate,
-    ValidateFromJSON,
-    ValidateFromYAML,
-    ValidateFromTOML,
-)
-
-__all__ = [
-    'Template',
-    'TemplateAny',
-    'TemplateDict',
-    'TemplateList',
-    'Optional',
-    'Options',
-    'Validate',
-    'ValidateFromJSON',
-    'ValidateFromYAML',
-    'ValidateFromTOML',
-]
-
-__version__ = '1.3.2'
+__version__ = '2.0.0-dev'
 __author__ = 'Alon Krymgand Osovsky'
