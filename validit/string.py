@@ -1,13 +1,17 @@
+import re
+
 from .schema import Schema
 from .errors import ValidationError, ValidationRegexError, ValidationTypeError
 
-from typing import Iterator, Pattern
+from typing import Iterator
 
 
 class String(Schema):
 
-    def __init__(self, pattern: Pattern = None) -> None:
-        self.pattern = pattern
+    def __init__(self, pattern: str = None) -> None:
+        self.pattern = None
+        if pattern is not None:
+            self.pattern = re.compile(pattern)
 
     def validate(self, data) -> Iterator[ValidationError]:
         if not isinstance(data, str):

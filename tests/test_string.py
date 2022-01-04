@@ -1,5 +1,4 @@
 import pytest
-import re
 
 from validit import String
 from validit.errors import ValidationTypeError, ValidationRegexError
@@ -38,7 +37,7 @@ class TestString:
         (r'\w*', ''),
     ))
     def test_valid_regex(self, pattern: str, data: str):
-        errors = tuple(String(re.compile(pattern)).validate(data))
+        errors = tuple(String(pattern).validate(data))
         assert len(errors) == 0
 
     @pytest.mark.parametrize('pattern, data', (
@@ -47,6 +46,6 @@ class TestString:
         (r'.{,10}', 'This string is too long.'),
     ))
     def test_invalid_regex(self, pattern: str, data: str):
-        errors = tuple(String(re.compile(pattern)).validate(data))
+        errors = tuple(String(pattern).validate(data))
         assert len(errors) == 1
         assert isinstance(errors[0], ValidationRegexError)
