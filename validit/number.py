@@ -1,3 +1,5 @@
+import numbers
+
 from validit import Schema
 from validit.errors import (
     ValidationError,
@@ -19,7 +21,7 @@ class Number(Schema):
         self.maximum = maximum
 
     def validate(self, data) -> Iterator[ValidationError]:
-        if not isinstance(data, (float, int)):
+        if not isinstance(data, numbers.Number):
             yield ValidationTypeError(float, data)
 
         elif self.minimum is not None and data < self.minimum:
